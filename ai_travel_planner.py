@@ -1,4 +1,5 @@
 import streamlit as st
+from googletrans import Translator
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
 import os
@@ -6,121 +7,145 @@ import os
 # 🛠 Configuration
 GOOGLE_API_KEY = st.secrets.get("GOOGLE_API_KEY", os.getenv("GOOGLE_API_KEY"))
 
-# 🚀 Check if API key is working
-def test_api_key():
-    url = f"https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key={GOOGLE_API_KEY}"
-    data = {"contents": [{"role": "user", "parts": [{"text": "Test response"}]}]}
-    response = requests.post(url, json=data)
-    return response.status_code == 200
-
-# 🌍 Supported Languages
-language_codes = {
+# 🌍 Language Selection (Using googletrans - Free & No API Needed)
+translator = Translator()
+languages = {
     "English": "en",
-    "French": "fr",
-    "Spanish": "es",
-    "German": "de",
-    "Italian": "it",
     "Hindi": "hi",
+    "Spanish": "es",
+    "French": "fr",
+    "German": "de",
     "Telugu": "te",
     "Tamil": "ta",
-    "Kannada": "ka"
+    "Kanada": "ka"
 }
 
-# 🎨 Streamlit UI Setup
+st.sidebar.title("🌍 Select Language")
+selected_language = st.sidebar.selectbox("Choose your language", list(languages.keys()))
+
+# 🎨 UI Configuration
 st.set_page_config(
-    page_title="✈ Plan My Trip - AI Travel Planner",
-    page_icon="🌍",
-    layout="wide"
+    page_title="Plan My Trip - AI Powered Travel Planner",
+    page_icon="✈",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# 📋 UI Input Section
+# 💅 Custom CSS for Styling & Background Image
+st.markdown("""
+<style>
+    body {
+        background-image: url("https://source.unsplash.com/1600x900/?travel,adventure");
+        background-size: cover;
+        background-position: center;
+    }
+    .stTextInput input, .stDateInput input, .stSelectbox select {
+        border: 2px solid #4a90e2 !important;
+        border-radius: 10px !important;
+        padding: 10px !important;
+    }
+    .stButton button {
+        background: linear-gradient(45deg, #ff6b6b, #f06595) !important;
+        color: white !important;
+        border-radius: 25px !important;
+        padding: 10px 30px !important;
+        width: 100%;
+        font-size: 16px;
+    }
+    .travel-card {
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin: 10px 0;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# 🖼 Hero Section with Background Image
+st.markdown("""
+<div style="text-align: center; padding: 40px 0; background: linear-gradient(135deg, #ff6b6b, #f06595); border-radius: 15px; margin-bottom: 30px;">
+    <h1 style="color: white; font-size: 2.8em;">✈ Plan My Trip - AI Travel Planner</h1>
+    <p style="color: white; font-size: 1.2em;">Your AI-Powered Travel Companion for Hassle-Free Trips</p>
+</div>
+""", unsafe_allow_html=True)
+
+# 📋 Input Section
 with st.expander("✈ Plan Your Trip", expanded=True):
     col1, col2 = st.columns(2)
-
     with col1:
-        source = st.text_input("🏙 Departure City", placeholder="New York")
-        destination = st.text_input("🌆 Destination City", placeholder="Paris")
-        travel_date = st.date_input("📅 Travel Date")
-        language = st.selectbox("🌍 Language", list(language_codes.keys()))
-
+        source = st.text_input("Departure City", placeholder="New York")
+        destination = st.text_input("Destination City", placeholder="Paris")
+        travel_date = st.date_input("Travel Date")
+        
     with col2:
-        currency = st.selectbox("💲 Currency", ["USD", "EUR", "GBP", "INR", "JPY"])
-        budget = st.slider("💰 Budget Range ($)", 100, 5000, (500, 2000))
-        preferences = st.multiselect("🎯 Travel Preferences", ["Eco-friendly", "Fastest Route", "Budget Options", "Luxury Travel", "Adventure"])
-        email = st.text_input("📧 Receive Itinerary via Email (Optional)")
+        currency = st.selectbox("Currency", ["USD", "EUR", "GBP", "INR", "JPY"])
+        budget = st.slider("Budget Range ($)", 100, 5000, (500, 2000))
+        preferences = st.multiselect("Preferences", ["Eco-friendly", "Fastest Route", "Budget Options", "Luxury Travel"])
 
-# 🧠 AI Travel Plan Generator
-def get_travel_plan(source, destination, currency, budget, language):
+# 🌍 Translation Function
+def translate_text(text, lang):
+    if lang != "English":  # Only translate if it's not English
+        return translator.translate(text, dest=languages[lang]).text
+    return text
+
+# 🤖 AI Travel Plan Generator
+def get_travel_plan(source, destination, currency, budget, lang):
     prompt_template = f"""
-    You are an AI travel expert. Generate a detailed travel itinerary from {source} to {destination} in {language}.
-
-    *Plan Should Include:*
-    ⿡ Best flights/trains/buses with estimated cost  
-    ⿢ Top-rated hotels with Google Maps links  
-    ⿣ Must-visit attractions with Google Maps links  
-    ⿤ Local food & restaurants with Google Maps links  
-    ⿥ Budget breakdown: Transport, Stay, Food, and Activities  
-    ⿦ Essential travel tips and safety recommendations  
-
-    *Additional Details:*
+    Create a detailed itinerary for a trip from {source} to {destination}.
     - Currency: {currency}
     - Budget: {budget[0]} - {budget[1]} USD
-    - Preferences: {", ".join(preferences) if preferences else "Standard travel"}
-
-    *Translate the entire response into {language}. Keep it structured and concise.*
+    - Include:
+      1. Transport options with costs
+      2. Accommodation suggestions
+      3. Must-see attractions
+      4. Local cuisine recommendations
+      5. Travel tips & warnings
+    Format with clear sections and emojis.
     """
-
+    
     try:
-        llm = ChatGoogleGenerativeAI(model="models/gemini-pro", google_api_key=GOOGLE_API_KEY)
+        llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=GOOGLE_API_KEY)
         response = llm.invoke([HumanMessage(content=prompt_template)])
-        return response.content
+        
+        if response:
+            return translate_text(response.content, lang)  # Translate AI response
+        else:
+            return translate_text("⚠ Sorry, I couldn't generate a plan. Try again!", lang)
     except Exception as e:
-        st.error(f"🚨 Error generating plan: {str(e)}")
-        return None
+        return translate_text(f"🚨 Error generating plan: {str(e)}", lang)
 
 # 🚀 Generate Plan Button
-if st.button("🚀 Generate AI Travel Plan"):
+if st.button("Generate AI Travel Plan ✈"):
     if not source or not destination:
-        st.warning("⚠ Please enter both the departure and destination cities!")
+        st.warning(translate_text("⚠ Please enter both departure and destination cities", selected_language))
     else:
-        with st.spinner("🔍 Finding the best options for you..."):
-            plan = get_travel_plan(source, destination, currency, budget, language)
-
+        with st.spinner(translate_text("🔍 Finding the best options for your trip...", selected_language)):
+            plan = get_travel_plan(source, destination, currency, budget, selected_language)
+        
         if plan:
-            st.success("🎉 Your AI-Powered Travel Plan is Ready!")
-            st.markdown(plan, unsafe_allow_html=True)
-
-            # ✉ Send itinerary via email (Mock-up)
-            if email:
-                st.info(f"📩 Itinerary sent to {email}!")
+            st.success(translate_text("🎉 Your Custom Travel Plan", selected_language))
+            st.markdown(f'<div class="travel-card">{plan}</div>', unsafe_allow_html=True)
 
 # 📌 Sidebar Information
 with st.sidebar:
     st.markdown("## ℹ How It Works")
-    st.markdown("""
-    ⿡ Enter travel details  
-    ⿢ Select preferences & budget  
-    ⿣ Click 'Generate AI Travel Plan'  
-    ⿤ Get an instant AI-powered itinerary  
-    ⿥ (Optional) Receive itinerary via email  
-    """)
-
+    st.markdown(translate_text("""
+    1. Enter your travel details
+    2. Select your preferences
+    3. Click 'Generate AI Travel Plan'
+    4. Get a custom itinerary instantly
+    """, selected_language))
     st.markdown("---")
-
-    st.markdown("### 🌟 Why Use Plan My Trip?")
-    st.markdown("""
-    ✅ AI-powered personalized recommendations  
-    ✅ Budget-friendly travel planning  
-    ✅ Multi-language support  
-    ✅ Google Maps integration  
-    ✅ Email itinerary feature  
-    """)
+    st.markdown(translate_text("### 🔒 AI-Powered & Secure", selected_language))
+    st.markdown(translate_text("We use AI to generate travel plans tailored for you.", selected_language))
 
 # 📝 Footer
 st.markdown("---")
 st.markdown("""
 <div style="text-align: center; padding: 20px; color: #666;">
-    <p>✨ Explore the Places & Happy Travel ✨<br>
+    <p>✨ Explore the Places & Happy Travels! ✨<br>
     Created by Gopichand Challa • Powered by Google Gemini</p>
 </div>
 """, unsafe_allow_html=True)
