@@ -6,6 +6,17 @@ import os
 # 🛠 Configuration
 GOOGLE_API_KEY = st.secrets.get("GOOGLE_API_KEY", os.getenv("GOOGLE_API_KEY"))
 
+# 🚀 Check if API key is working
+def test_api_key():
+    url = f"https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key={GOOGLE_API_KEY}"
+    data = {"contents": [{"role": "user", "parts": [{"text": "Test response"}]}]}
+    response = requests.post(url, json=data)
+    return response.status_code == 200
+
+if not GOOGLE_API_KEY or not test_api_key():
+    st.error("🚨 Google API Key is missing or invalid! Please check your key settings.")
+    st.stop()
+
 # 🌍 Supported Languages
 language_codes = {
     "English": "en",
