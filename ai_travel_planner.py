@@ -55,18 +55,22 @@ st.markdown("""
         padding: 20px;
         border-radius: 15px;
         box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
-        background: white;
+        background: #f5f5f5;
         margin-bottom: 20px;
         line-height: 1.6;
+        color: #2C3E50;
+        white-space: pre-wrap;
     }
     .sidebar {
-        background: white !important;
+        background: #ffffff !important;
         padding: 20px;
         border-radius: 15px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     .sidebar h2, .sidebar p {
         color: #2980B9 !important;
+        margin-bottom: 10px !important;
+        line-height: 1.8 !important;
     }
     .footer {
         text-align: center;
