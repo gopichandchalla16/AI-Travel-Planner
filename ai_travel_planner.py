@@ -4,6 +4,14 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
 import os
 
+# 🌟 FIX: Move set_page_config to the very top!
+st.set_page_config(
+    page_title="Plan My Trip - AI Powered Travel Planner",
+    page_icon="✈",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 # 🛠 Configuration
 GOOGLE_API_KEY = st.secrets.get("GOOGLE_API_KEY", os.getenv("GOOGLE_API_KEY"))
 
