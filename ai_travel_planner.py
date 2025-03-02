@@ -6,6 +6,8 @@ import os
 
 # Set API key from Streamlit Secrets
 API_KEY = st.secrets["secrets"]["GENAI_API_KEY"]
+
+# Configure API Key (Correct Way)
 genai.configure(api_key=API_KEY)
 
 
