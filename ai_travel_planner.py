@@ -21,7 +21,7 @@ language_codes = {
 
 # 🎨 Streamlit UI Setup
 st.set_page_config(
-    page_title="✈ Plan My Trip AI Travel Planner",
+    page_title="✈ Make My Trip AI Travel Planner",
     page_icon="🌍",
     layout="wide"
 )
@@ -32,6 +32,7 @@ st.markdown("""
     /* General Styling */
     body {
         font-family: 'Arial', sans-serif;
+        color: #333;
     }
     .stTextInput input, .stDateInput input, .stSelectbox select {
         border: 1px solid #4a90e2 !important;
@@ -68,34 +69,35 @@ st.markdown("""
     }
     /* Sidebar Styling */
     .css-1d391kg {
-        background: linear-gradient(135deg, #4a90e2, #9013fe) !important;
-        color: white !important;
+        background: #f0f2f6 !important;
         padding: 20px !important;
         border-radius: 15px !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     .sidebar .stMarkdown h2 {
-        color: white !important;
+        color: #4a90e2 !important;
     }
     .sidebar .stMarkdown p {
-        color: white !important;
+        color: #333 !important;
     }
     /* Footer Styling */
     .footer {
         text-align: center;
         padding: 20px;
-        background: linear-gradient(135deg, #4a90e2, #9013fe);
+        background: #f0f2f6;
         border-radius: 15px;
-        color: white;
+        color: #333;
         margin-top: 30px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 </style>
 """, unsafe_allow_html=True)
 
 # 🖼 Hero Section
 st.markdown("""
-<div style="text-align: center; padding: 40px 0; background: linear-gradient(135deg, #4a90e2, #9013fe); border-radius: 15px; margin-bottom: 30px;">
-    <h1 style="color: white; font-size: 3em; margin-bottom: 10px;">✈ Make My Trip AI Travel Planner</h1>
-    <p style="color: white; font-size: 1.4em;">Your AI-Powered Travel Guide</p>
+<div style="text-align: center; padding: 40px 0; margin-bottom: 30px;">
+    <h1 style="color: #4a90e2; font-size: 3em; margin-bottom: 10px;">✈ Make My Trip AI Travel Planner</h1>
+    <p style="color: #333; font-size: 1.4em;">Your AI-Powered Travel Guide</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -185,7 +187,7 @@ if st.button("🚀 Generate AI Travel Plan"):
 with st.sidebar:
     st.markdown("## ℹ How It Works")
     st.markdown("""
-    <div style="color: white;">
+    <div style="color: #333;">
     <p>⿡ Enter travel details</p>
     <p>⿢ Select preferences & budget</p>
     <p>⿣ Click 'Generate AI Travel Plan'</p>
@@ -195,9 +197,9 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
     st.markdown("---")
-    st.markdown("### 🌟 Why Use Plan My Trip AI Travel Planner?")
+    st.markdown("### 🌟 Why Use Make My Trip AI Travel Planner?")
     st.markdown("""
-    <div style="color: white;">
+    <div style="color: #333;">
     <p>✅ AI-powered personalized recommendations</p>
     <p>✅ Weather & Temperature Info</p>
     <p>✅ Multi-language support</p>
