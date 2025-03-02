@@ -92,15 +92,15 @@ with st.expander("✈ Plan Your Trip", expanded=True):
 # 🧠 AI Travel Plan Generator
 def get_travel_plan(source, destination, currency, budget, language):
     prompt_template = f"""
-    You are an AI travel expert. Generate a detailed travel itinerary from {source} to {destination} in {language}.
+    You are an AI travel expert. Generate a concise travel itinerary from {source} to {destination} in {language}.
 
     *Plan Should Include:*
-    ⿡ Best flights/trains/buses with estimated cost  
-    ⿢ Top-rated hotels with Google Maps links  
-    ⿣ Must-visit attractions with Google Maps links  
-    ⿤ Local food & restaurants with Google Maps links  
-    ⿥ Budget breakdown: Transport, Stay, Food, and Activities  
-    ⿦ Essential travel tips and safety recommendations  
+    - Best flights/trains/buses with estimated cost  
+    - Top-rated hotels with Google Maps links  
+    - Must-visit attractions with Google Maps links  
+    - Local food & restaurants with Google Maps links  
+    - Budget breakdown: Transport, Stay, Food, and Activities  
+    - Essential travel tips and safety recommendations  
 
     *Additional Details:*
     - Currency: {currency}
