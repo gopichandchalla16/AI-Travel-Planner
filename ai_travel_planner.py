@@ -64,7 +64,7 @@ def get_travel_plan(source, destination, currency, budget, language):
     """
 
     try:
-        llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=GOOGLE_API_KEY)
+        llm = ChatGoogleGenerativeAI(model="models/gemini-pro", google_api_key=GOOGLE_API_KEY)
         response = llm.invoke([HumanMessage(content=prompt_template)])
         return response.content
     except Exception as e:
