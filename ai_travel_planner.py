@@ -22,7 +22,7 @@ language_codes = {
 
 # 🎨 Streamlit UI Setup
 st.set_page_config(
-    page_title="✈ Plan My Trip - AI Travel Planner",
+    page_title="✈ Make My Trip AI Travel Planner",
     page_icon="🌍",
     layout="wide"
 )
@@ -69,8 +69,8 @@ st.markdown("""
 # 🖼 Hero Section
 st.markdown("""
 <div style="text-align: center; padding: 40px 0; background: linear-gradient(135deg, #4a90e2, #9013fe); border-radius: 15px; margin-bottom: 30px;">
-    <h1 style="color: white; font-size: 3em; margin-bottom: 10px;">✈ Plan My Trip</h1>
-    <p style="color: white; font-size: 1.4em;">Your AI-Powered Travel Planner</p>
+    <h1 style="color: white; font-size: 3em; margin-bottom: 10px;">✈ Make My Trip AI Travel Planner</h1>
+    <p style="color: white; font-size: 1.4em;">Your AI-Powered Travel Guide</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -93,22 +93,25 @@ with st.expander("✈ Plan Your Trip", expanded=True):
 # 🧠 AI Travel Plan Generator
 def get_travel_plan(source, destination, currency, budget, language):
     prompt_template = f"""
-    You are an AI travel expert. Generate a concise travel itinerary from {source} to {destination} in {language}.
+    You are an AI travel expert. Generate a comprehensive travel itinerary from {source} to {destination} in {language}.
 
     *Plan Should Include:*
-    - Best flights/trains/buses with estimated cost  
-    - Top-rated hotels with Google Maps links  
-    - Must-visit attractions with Google Maps links  
-    - Local food & restaurants with Google Maps links  
-    - Budget breakdown: Transport, Stay, Food, and Activities  
-    - Essential travel tips and safety recommendations  
+    - Best flights/trains/buses with estimated cost
+    - Top-rated hotels with Google Maps links
+    - Famous places to visit with Google Maps links
+    - Local food & restaurants with Google Maps links
+    - Weather information and temperature forecast
+    - Pilgrimage places (if any)
+    - Vehicle transportation options with pricing
+    - Budget breakdown: Transport, Stay, Food, and Activities
+    - Essential travel tips and safety recommendations
 
     *Additional Details:*
     - Currency: {currency}
     - Budget: {budget[0]} - {budget[1]} USD
     - Preferences: {", ".join(preferences) if preferences else "Standard travel"}
 
-    *Translate the entire response into {language}. Keep it structured and concise.*
+    *Translate the entire response into {language}. Keep it structured and clear.*
     """
 
     # Initialize AI model
@@ -125,7 +128,7 @@ def get_travel_plan(source, destination, currency, budget, language):
 
 # ✅ Function to Translate Text
 def translate_text(text, target_language):
-    if target_language == "English":  # No need to translate if already in English
+    if target_language == "English":
         return text
 
     translator = Translator()
@@ -134,7 +137,7 @@ def translate_text(text, target_language):
         return translated_text
     except Exception as e:
         st.error(f"Translation error: {e}")
-        return text  # Return original text if translation fails
+        return text
 
 # 🚀 Generate Plan Button
 if st.button("🚀 Generate AI Travel Plan"):
@@ -148,35 +151,33 @@ if st.button("🚀 Generate AI Travel Plan"):
             st.success("🎉 Your AI-Powered Travel Plan is Ready!")
             st.markdown(f'<div class="travel-card">{plan}</div>', unsafe_allow_html=True)
 
-            # ✉ Send itinerary via email (Mock-up)
             if email:
                 st.info(f"📩 Itinerary sent to {email}!")
         else:
-            st.error(plan)  # Display error message
+            st.error(plan)
 
 # 📌 Sidebar Information
 with st.sidebar:
     st.markdown("## ℹ How It Works")
     st.markdown("""
-    ⿡ Enter travel details  
-    ⿢ Select preferences & budget  
-    ⿣ Click 'Generate AI Travel Plan'  
-    ⿤ Get an instant AI-powered itinerary  
-    ⿥ (Optional) Receive itinerary via email  
+    ⿡ Enter travel details
+    ⿢ Select preferences & budget
+    ⿣ Click 'Generate AI Travel Plan'
+    ⿤ Get an instant AI-powered itinerary
+    ⿥ (Optional) Receive itinerary via email
     """)
 
     st.markdown("---")
-
-    st.markdown("### 🌟 Why Use Plan My Trip?")
+    st.markdown("### 🌟 Why Use Make My Trip AI Travel Planner?")
     st.markdown("""
-    ✅ AI-powered personalized recommendations  
-    ✅ Budget-friendly travel planning  
-    ✅ Multi-language support  
-    ✅ Google Maps integration  
-    ✅ Email itinerary feature  
+    ✅ AI-powered personalized recommendations
+    ✅ Weather & Temperature Info
+    ✅ Multi-language support
+    ✅ Google Maps integration
+    ✅ Vehicle Transportation Options
+    ✅ Email itinerary feature
     """)
 
-# 📝 Footer
 st.markdown("---")
 st.markdown("""
 <div style="text-align: center; padding: 20px; color: #666;">
