@@ -3,7 +3,6 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage
 from googletrans import Translator  # For translation
 import os
-import time
 
 # 🛠 Configuration
 GOOGLE_API_KEY = st.secrets.get("GOOGLE_API_KEY", os.getenv("GOOGLE_API_KEY"))
@@ -22,7 +21,7 @@ language_codes = {
 
 # 🎨 Streamlit UI Setup
 st.set_page_config(
-    page_title="✈ Make My Trip AI Travel Planner",
+    page_title="✈ Plan My Trip AI Travel Planner",
     page_icon="🌍",
     layout="wide"
 )
@@ -30,6 +29,10 @@ st.set_page_config(
 # 💅 Custom CSS for Better UI
 st.markdown("""
 <style>
+    /* General Styling */
+    body {
+        font-family: 'Arial', sans-serif;
+    }
     .stTextInput input, .stDateInput input, .stSelectbox select {
         border: 1px solid #4a90e2 !important;
         border-radius: 10px !important;
@@ -62,6 +65,28 @@ st.markdown("""
     }
     .stMarkdown p {
         color: #333 !important;
+    }
+    /* Sidebar Styling */
+    .css-1d391kg {
+        background: linear-gradient(135deg, #4a90e2, #9013fe) !important;
+        color: white !important;
+        padding: 20px !important;
+        border-radius: 15px !important;
+    }
+    .sidebar .stMarkdown h2 {
+        color: white !important;
+    }
+    .sidebar .stMarkdown p {
+        color: white !important;
+    }
+    /* Footer Styling */
+    .footer {
+        text-align: center;
+        padding: 20px;
+        background: linear-gradient(135deg, #4a90e2, #9013fe);
+        border-radius: 15px;
+        color: white;
+        margin-top: 30px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -97,14 +122,14 @@ def get_travel_plan(source, destination, currency, budget, language):
 
     *Plan Should Include:*
     - Best flights/trains/buses with estimated cost
-    - Top-rated hotels with detailed descriptions
-    - Famous places to visit with detailed descriptions
-    - Local food & restaurants with detailed descriptions
-    - Weather information and temperature forecast
-    - Pilgrimage places (if any)
-    - Vehicle transportation options with pricing
+    - Top-rated hotels with detailed descriptions (e.g., amenities, location, price range)
+    - Famous places to visit with detailed descriptions (e.g., historical significance, entry fees, timings)
+    - Local food & restaurants with detailed descriptions (e.g., popular dishes, price range, ambiance)
+    - Weather information and temperature forecast for the travel dates
+    - Pilgrimage places (if any) with detailed descriptions
+    - Vehicle transportation options with pricing (e.g., taxis, public transport, rental cars)
     - Budget breakdown: Transport, Stay, Food, and Activities
-    - Essential travel tips and safety recommendations
+    - Essential travel tips and safety recommendations (e.g., local customs, emergency contacts)
 
     *Additional Details:*
     - Currency: {currency}
@@ -160,27 +185,31 @@ if st.button("🚀 Generate AI Travel Plan"):
 with st.sidebar:
     st.markdown("## ℹ How It Works")
     st.markdown("""
-    ⿡ Enter travel details
-    ⿢ Select preferences & budget
-    ⿣ Click 'Generate AI Travel Plan'
-    ⿤ Get an instant AI-powered itinerary
-    ⿥ (Optional) Receive itinerary via email
-    """)
+    <div style="color: white;">
+    <p>⿡ Enter travel details</p>
+    <p>⿢ Select preferences & budget</p>
+    <p>⿣ Click 'Generate AI Travel Plan'</p>
+    <p>⿤ Get an instant AI-powered itinerary</p>
+    <p>⿥ (Optional) Receive itinerary via email</p>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("---")
-    st.markdown("### 🌟 Why Use Make My Trip AI Travel Planner?")
+    st.markdown("### 🌟 Why Use Plan My Trip AI Travel Planner?")
     st.markdown("""
-    ✅ AI-powered personalized recommendations
-    ✅ Weather & Temperature Info
-    ✅ Multi-language support
-    ✅ Detailed descriptions of places, hotels, and restaurants
-    ✅ Vehicle Transportation Options
-    ✅ Email itinerary feature
-    """)
+    <div style="color: white;">
+    <p>✅ AI-powered personalized recommendations</p>
+    <p>✅ Weather & Temperature Info</p>
+    <p>✅ Multi-language support</p>
+    <p>✅ Detailed descriptions of places, hotels, and restaurants</p>
+    <p>✅ Vehicle Transportation Options</p>
+    <p>✅ Email itinerary feature</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-st.markdown("---")
+# Footer
 st.markdown("""
-<div style="text-align: center; padding: 20px; color: #666;">
+<div class="footer">
     <p>✨ Explore the places & Happy Travels ✨<br>
     Created by Gopichand Challa • Powered by Google Gemini</p>
 </div>
