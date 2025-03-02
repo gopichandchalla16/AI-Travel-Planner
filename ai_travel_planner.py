@@ -1,6 +1,6 @@
 import streamlit as st
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 from googletrans import Translator  # For translation
 import os
 import time
@@ -112,10 +112,13 @@ def get_travel_plan(source, destination, currency, budget, language):
     """
 
     # Initialize AI model
-    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", google_api_key=GOOGLE_API_KEY)
+    llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=GOOGLE_API_KEY)
 
     try:
-        response = llm.invoke([HumanMessage([system_prompt,user_prompt])
+        response = llm.invoke([
+            SystemMessage(content="You are an AI travel expert."),
+            HumanMessage(content=prompt_template)
+        ])
         return response.content if response else "⚠ No response from AI."
     except Exception as e:
         return f"❌ Error fetching travel options: {str(e)}"
@@ -126,8 +129,12 @@ def translate_text(text, target_language):
         return text
 
     translator = Translator()
-    translated_text = translator.translate(text, dest=language_codes.get(target_language, "en")).text
-    return translated_text
+    try:
+        translated_text = translator.translate(text, dest=language_codes.get(target_language, "en")).text
+        return translated_text
+    except Exception as e:
+        st.error(f"Translation error: {e}")
+        return text  # Return original text if translation fails
 
 # 🚀 Generate Plan Button
 if st.button("🚀 Generate AI Travel Plan"):
@@ -135,20 +142,17 @@ if st.button("🚀 Generate AI Travel Plan"):
         st.warning("⚠ Please enter both the departure and destination cities!")
     else:
         with st.spinner("🔍 Finding the best options for you..."):
-            progress_bar = st.progress(0)
-            for i in range(100):
-                time.sleep(0.01)  # Simulate a delay
-                progress_bar.progress(i + 1)
-            
             plan = get_travel_plan(source, destination, currency, budget, language)
 
-        if plan:
+        if plan and not plan.startswith("❌"):
             st.success("🎉 Your AI-Powered Travel Plan is Ready!")
             st.markdown(f'<div class="travel-card">{plan}</div>', unsafe_allow_html=True)
 
             # ✉ Send itinerary via email (Mock-up)
             if email:
                 st.info(f"📩 Itinerary sent to {email}!")
+        else:
+            st.error(plan)  # Display error message
 
 # 📌 Sidebar Information
 with st.sidebar:
