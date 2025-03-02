@@ -13,10 +13,6 @@ def test_api_key():
     response = requests.post(url, json=data)
     return response.status_code == 200
 
-if not GOOGLE_API_KEY or not test_api_key():
-    st.error("🚨 Google API Key is missing or invalid! Please check your key settings.")
-    st.stop()
-
 # 🌍 Supported Languages
 language_codes = {
     "English": "en",
