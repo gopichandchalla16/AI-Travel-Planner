@@ -110,18 +110,23 @@ def get_travel_plan(source, destination, currency, budget, language):
     *Translate the entire response into {language}. Keep it structured and concise.*
     """
 
+ # ✅ Initialize AI model
+    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", google_api_key=GOOGLE_API_KEY)
+
     try:
-        llm = ChatGoogleGenerativeAI(
-            model="gemini-1.0-pro",  # Correct model name
-            google_api_key=GOOGLE_API_KEY,
-            max_retries=3,  # Retry up to 3 times
-            timeout=30,     # Increase timeout to 30 seconds
-        )
-        response = llm.invoke([HumanMessage(content=prompt_template)])
-        return response.content
+        response = llm.invoke([system_prompt, user_prompt])
+        return response.content if response else "⚠ No response from AI."
     except Exception as e:
-        st.error(f"🚨 Error generating plan: {str(e)}")
-        return None
+        return f"❌ Error fetching travel options: {str(e)}"
+
+# ✅ Function to Translate Text
+def translate_text(text, target_language):
+    if target_language == "English":  # No need to translate if already in English
+        return text
+
+    translator = Translator()
+    translated_text = translator.translate(text, dest=language_codes.get(target_language, "en")).text
+    return translated_text
 
 # 🚀 Generate Plan Button
 if st.button("🚀 Generate AI Travel Plan"):
