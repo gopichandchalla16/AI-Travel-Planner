@@ -13,9 +13,9 @@ language_codes = {
     "Spanish": "es",
     "German": "de",
     "Italian": "it",
-    "Hindi": "hi"
-    "Telugu": "te"
-    "Tamil": "ta"
+    "Hindi": "hi",
+    "Telugu": "te",
+    "Tamil": "ta",
     "Kannada": "ka"
 }
 
