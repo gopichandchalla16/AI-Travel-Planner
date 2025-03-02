@@ -1,6 +1,7 @@
 import streamlit as st
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
+from googletrans import Translator  # For translation
 import os
 import time
 
@@ -110,11 +111,11 @@ def get_travel_plan(source, destination, currency, budget, language):
     *Translate the entire response into {language}. Keep it structured and concise.*
     """
 
- # ✅ Initialize AI model
+    # Initialize AI model
     llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", google_api_key=GOOGLE_API_KEY)
 
     try:
-        response = llm.invoke([system_prompt, user_prompt])
+        response = llm.invoke([HumanMessage([system_prompt,user_prompt])
         return response.content if response else "⚠ No response from AI."
     except Exception as e:
         return f"❌ Error fetching travel options: {str(e)}"
@@ -126,7 +127,7 @@ def translate_text(text, target_language):
 
     translator = Translator()
     translated_text = translator.translate(text, dest=language_codes.get(target_language, "en")).text
-    return translated_text
+    return translated_text
 
 # 🚀 Generate Plan Button
 if st.button("🚀 Generate AI Travel Plan"):
