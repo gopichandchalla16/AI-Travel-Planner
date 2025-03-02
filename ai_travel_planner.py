@@ -97,9 +97,9 @@ def get_travel_plan(source, destination, currency, budget, language):
 
     *Plan Should Include:*
     - Best flights/trains/buses with estimated cost
-    - Top-rated hotels with Google Maps links
-    - Famous places to visit with Google Maps links
-    - Local food & restaurants with Google Maps links
+    - Top-rated hotels with detailed descriptions
+    - Famous places to visit with detailed descriptions
+    - Local food & restaurants with detailed descriptions
     - Weather information and temperature forecast
     - Pilgrimage places (if any)
     - Vehicle transportation options with pricing
@@ -173,7 +173,7 @@ with st.sidebar:
     ✅ AI-powered personalized recommendations
     ✅ Weather & Temperature Info
     ✅ Multi-language support
-    ✅ Google Maps integration
+    ✅ Detailed descriptions of places, hotels, and restaurants
     ✅ Vehicle Transportation Options
     ✅ Email itinerary feature
     """)
