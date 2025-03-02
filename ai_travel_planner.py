@@ -60,13 +60,13 @@ st.markdown("""
         line-height: 1.6;
     }
     .sidebar {
-        background: #2980B9 !important;
+        background: white !important;
         padding: 20px;
         border-radius: 15px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     .sidebar h2, .sidebar p {
-        color: white !important;
+        color: #2980B9 !important;
     }
     .footer {
         text-align: center;
@@ -76,14 +76,22 @@ st.markdown("""
         border-radius: 15px;
         margin-top: 40px;
     }
+    .hero-section {
+        text-align: center;
+        padding: 50px 0;
+        background: linear-gradient(135deg, #2980B9, #6DD5FA);
+        border-radius: 15px;
+        color: white;
+        margin-bottom: 20px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 # 🖼 Hero Section
 st.markdown("""
-<div style="text-align: center; padding: 50px 0;">
-    <h1 style="color: #2980B9; font-size: 3.5em;">🌍 Plan My Trip - AI Powered Travel Planner</h1>
-    <p style="font-size: 1.4em; color: #2C3E50;">Personalized Travel Itineraries at Your Fingertips</p>
+<div class="hero-section">
+    <h1 style="font-size: 3.5em;">🌍 Plan My Trip - AI Powered Travel Planner</h1>
+    <p style="font-size: 1.4em;">Personalized Travel Itineraries at Your Fingertips</p>
 </div>
 """, unsafe_allow_html=True)
 
