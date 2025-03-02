@@ -2,14 +2,10 @@ import streamlit as st
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
-from dotenv import load_dotenv
 import os
 
-# Load environment variables
-load_dotenv()
-
-# Set API key
-API_KEY = os.getenv("GENAI_API_KEY")
+# Set API key from Streamlit Secrets
+API_KEY = st.secrets["GENAI_API_KEY"]
 
 # Custom Theme
 st.set_page_config(
