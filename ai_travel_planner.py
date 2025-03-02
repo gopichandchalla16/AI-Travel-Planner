@@ -5,7 +5,7 @@ from langchain_core.output_parsers import StrOutputParser
 import os
 
 # Set API key from Streamlit Secrets
-API_KEY = st.secrets["GENAI_API_KEY"]
+API_KEY = st.secrets["AIzaSyB1E2cCnRDAbX_siKss8NFaeKRKlK2e6ko"]
 
 # Custom Theme
 st.set_page_config(
