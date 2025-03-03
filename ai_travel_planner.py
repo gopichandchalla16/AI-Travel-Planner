@@ -26,17 +26,54 @@ st.set_page_config(
     layout="wide"
 )
 
-# 💅 Enhanced Custom CSS
+# 💅 Enhanced Custom CSS with Updated Input Styles
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
     body {
         font-family: 'Poppins', sans-serif;
         color: #333;
-        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2), url('https://www.transparenttextures.com/patterns/aircraft.png');
+        background-blend-mode: overlay;
+        background-size: cover;
+        background-position: center;
     }
-    /* Input Styling */
-    .stTextInput input, .stDateInput input, .stSelectbox select {
+    /* Enhanced Input Styling for Departure & Destination */
+    .stTextInput > div > div > input {
+        border: 2px solid #4a90e2 !important;
+        border-radius: 15px !important;
+        padding: 12px 12px 12px 40px !important; /* Space for icon */
+        font-size: 16px !important;
+        background: #fff url('https://img.icons8.com/ios-filled/20/4a90e2/marker.png') no-repeat 10px center !important;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .stTextInput > div > div > input:focus {
+        border-color: #9013fe !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .stTextInput > div > div > input:hover {
+        border-color: #00796b !important;
+    }
+    /* Enhanced Date Input Styling */
+    .stDateInput > div > div > input {
+        border: 2px solid #4a90e2 !important;
+        border-radius: 15px !important;
+        padding: 12px 12px 12px 40px !important; /* Space for icon */
+        font-size: 16px !important;
+        background: #fff url('https://img.icons8.com/ios-filled/20/4a90e2/calendar.png') no-repeat 10px center !important;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .stDateInput > div > div > input:focus {
+        border-color: #9013fe !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .stDateInput > div > div > input:hover {
+        border-color: #00796b !important;
+    }
+    /* Selectbox Styling (Unchanged) */
+    .stSelectbox > div > div > select {
         border: 2px solid #4a90e2 !important;
         border-radius: 12px !important;
         padding: 12px !important;
@@ -44,10 +81,10 @@ st.markdown("""
         background: #fff;
         transition: border-color 0.3s ease;
     }
-    .stTextInput input:focus, .stDateInput input:focus, .stSelectbox select:focus {
+    .stSelectbox > div > div > select:focus {
         border-color: #9013fe !important;
     }
-    /* Button Styling */
+    /* Button Styling (Unchanged) */
     .stButton button {
         background: linear-gradient(45deg, #4a90e2, #9013fe) !important;
         color: white !important;
@@ -62,7 +99,7 @@ st.markdown("""
         transform: scale(1.05) !important;
         box-shadow: 0 6px 15px rgba(0,0,0,0.3);
     }
-    /* Travel Card Styling */
+    /* Travel Card Styling (Unchanged) */
     .travel-card {
         padding: 25px;
         border-radius: 20px;
@@ -86,7 +123,7 @@ st.markdown("""
     .stMarkdown h2, .stMarkdown h3 {
         color: #00796b !important;
     }
-    /* Sidebar Styling */
+    /* Sidebar Styling (Unchanged) */
     .css-1d391kg {
         background: linear-gradient(135deg, #e0f7fa, #b2ebf2) !important;
         padding: 25px !important;
@@ -103,7 +140,7 @@ st.markdown("""
         font-size: 1.1em !important;
         line-height: 1.7 !important;
     }
-    /* Hero Section */
+    /* Hero Section (Unchanged) */
     .hero {
         text-align: center;
         padding: 80px 20px;
@@ -123,7 +160,7 @@ st.markdown("""
         font-size: 1.4em;
         color: #555;
     }
-    /* Footer Styling */
+    /* Footer Styling (Unchanged) */
     .footer {
         text-align: center;
         padding: 25px;
@@ -139,6 +176,10 @@ st.markdown("""
         .hero p { font-size: 1.1em; }
         .travel-card { font-size: 14px; padding: 15px; }
         .stButton button { font-size: 16px; padding: 10px 25px !important; }
+        .stTextInput > div > div > input, .stDateInput > div > div > input {
+            padding: 10px 10px 10px 35px !important;
+            font-size: 14px !important;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -192,7 +233,7 @@ def get_travel_plan(source, destination, currency, budget, language):
     """
 
     # Initialize AI model
-    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", google_api_key=GOOGLE_API_KEY)  # Updated to a more stable model
+    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", google_api_key=GOOGLE_API_KEY)
 
     try:
         response = llm.invoke([
