@@ -180,18 +180,18 @@ def get_travel_plan(source, destination, currency, budget, language):
     *Translate the entire response into {language}. Keep it structured and clear.*
     """
 
-   # Initialize AI Model
-if GOOGLE_API_KEY:
+    # Initialize AI model
     llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", google_api_key=GOOGLE_API_KEY)
-else:
-    st.error("❌ Missing Google API Key. Please check your API configuration.")
 
     try:
         response = llm.invoke([
             SystemMessage(content="You are an AI travel expert."),
             HumanMessage(content=prompt_template)
         ])
-        return response.content if response else "⚠ No response from AI."
+        if response:
+            return response.content
+        else:
+            return "⚠ No response from AI."
     except Exception as e:
         return f"❌ Error fetching travel options: {str(e)}"
 
