@@ -229,19 +229,19 @@ if st.button("🚀 Generate AI Travel Plan"):
 with st.sidebar:
     st.markdown("## ℹ How It Works")
     st.markdown("""
-    <div style="color: #555;">
-    <p>⿡ Enter travel details</p>
-    <p>⿢ Select preferences & budget</p>
-    <p>⿣ Click 'Generate AI Travel Plan'</p>
-    <p>⿤ Get an instant AI-powered itinerary</p>
-    <p>⿥ (Optional) Receive itinerary via email</p>
+    <div style="color: #f2f2f2;">
+    <p> Enter travel details</p>
+    <p> Select preferences & budget</p>
+    <p> Click Generate AI Travel Plan</p>
+    <p> Get an instant AI-powered itinerary</p>
+    <p> (Optional) Receive itinerary via email</p>
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown("### 🌟 Why Use Plan My Trip AI Travel Planner?")
     st.markdown("""
-    <div style="color: #555;">
+    <div style="color: #f2f2f2;">
     <p>✅ AI-powered personalized recommendations</p>
     <p>✅ Weather & Temperature Info</p>
     <p>✅ Multi-language support</p>
