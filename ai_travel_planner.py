@@ -5,8 +5,8 @@ from datetime import datetime
 from functools import lru_cache
 
 # 🛠 Configuration
-# Access API key from secrets.toml or fallback to hardcoded (for testing only)
-GOOGLE_API_KEY = st.secrets.get("general", {}).get("GOOGLE_API_KEY", "AIzaSyB12LqrvgCDH8zh2kwRSER-6KEw6PcLbaQ")
+# Access API key from secrets.toml or environment variable (no hardcoded fallback)
+GOOGLE_API_KEY = st.secrets.get("general", {}).get("GOOGLE_API_KEY", os.getenv("GOOGLE_API_KEY"))
 
 # 🌍 Supported Languages
 language_codes = {
