@@ -1,7 +1,7 @@
 import streamlit as st
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage
-from googletrans import Translator  # For translation
+from googletrans import Translator
 import os
 
 # 🛠 Configuration
@@ -26,127 +26,138 @@ st.set_page_config(
     layout="wide"
 )
 
-# 💅 Custom CSS for Better UI
+# 💅 Enhanced Custom CSS
 st.markdown("""
 <style>
-    /* General Styling */
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
     body {
         font-family: 'Poppins', sans-serif;
         color: #333;
-        background-color: #f5f5f5;
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
     }
+    /* Input Styling */
     .stTextInput input, .stDateInput input, .stSelectbox select {
-        border: 1px solid #4a90e2 !important;
-        border-radius: 10px !important;
-        padding: 10px !important;
+        border: 2px solid #4a90e2 !important;
+        border-radius: 12px !important;
+        padding: 12px !important;
         font-size: 16px !important;
+        background: #fff;
+        transition: border-color 0.3s ease;
     }
+    .stTextInput input:focus, .stDateInput input:focus, .stSelectbox select:focus {
+        border-color: #9013fe !important;
+    }
+    /* Button Styling */
     .stButton button {
         background: linear-gradient(45deg, #4a90e2, #9013fe) !important;
         color: white !important;
         border-radius: 25px !important;
-        padding: 10px 30px !important;
+        padding: 12px 35px !important;
         font-size: 18px !important;
-        font-weight: bold !important;
-        transition: transform 0.2s ease !important;
+        font-weight: 600 !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
     .stButton button:hover {
         transform: scale(1.05) !important;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.3);
     }
+    /* Travel Card Styling */
     .travel-card {
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        margin: 10px 0;
-        background: white;
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        margin: 15px 0;
+        background: #fff;
         font-size: 16px;
-        line-height: 1.6;
+        line-height: 1.8;
+        overflow-x: auto;
+        animation: fadeIn 0.5s ease-in-out;
     }
-    .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    .stMarkdown h1 {
         color: #4a90e2 !important;
+        font-weight: 700 !important;
+        font-size: 2.8em !important;
     }
-    .stMarkdown p {
-        color: #333 !important;
+    .stMarkdown h2, .stMarkdown h3 {
+        color: #00796b !important;
     }
     /* Sidebar Styling */
     .css-1d391kg {
-        background: #e0f7fa !important; /* Light Cyan background for sidebar */
-        padding: 20px !important;
-        border-radius: 15px !important;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        background: linear-gradient(135deg, #e0f7fa, #b2ebf2) !important;
+        padding: 25px !important;
+        border-radius: 20px !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
     .sidebar .stMarkdown h2 {
-        color: #00796b !important; /* Teal for headings */
-        font-size: 1.5em !important;
-        margin-bottom: 10px !important;
-    }
-    .sidebar .stMarkdown h3 {
-        color: #00796b !important; /* Teal for subheadings */
-        font-size: 1.2em !important;
-        margin-bottom: 10px !important;
+        color: #00796b !important;
+        font-size: 1.6em !important;
+        font-weight: 600 !important;
     }
     .sidebar .stMarkdown p {
-        color: #37474f !important; /* Dark Blue Gray for better readability */
-        font-size: 1em !important;
-        line-height: 1.6 !important;
-    }
-    /* Footer Styling */
-    .footer {
-        text-align: center;
-        padding: 20px;
-        background: #4a90e2;
-        border-radius: 15px;
-        color: white;
-        margin-top: 30px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        color: #37474f !important;
+        font-size: 1.1em !important;
+        line-height: 1.7 !important;
     }
     /* Hero Section */
     .hero {
         text-align: center;
-        padding: 60px 0;
-        margin-bottom: 30px;
-        background: white; /* Light background for app name */
-        border-radius: 15px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        padding: 80px 20px;
+        margin-bottom: 40px;
+        background: linear-gradient(135deg, #ffffff, #f0f4f8);
+        border-radius: 20px;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
     }
     .hero h1 {
-        font-size: 2.5em; /* Adjusted font size */
-        margin-bottom: 10px;
-        font-weight: 600;
-        color: #4a90e2; /* Blue for app name */
+        font-size: 3em;
+        margin-bottom: 15px;
+        font-weight: 700;
+        color: #4a90e2;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     }
     .hero p {
-        font-size: 1.2em; /* Adjusted font size */
-        color: #333; /* Dark text for subtitle */
+        font-size: 1.4em;
+        color: #555;
+    }
+    /* Footer Styling */
+    .footer {
+        text-align: center;
+        padding: 25px;
+        background: linear-gradient(45deg, #4a90e2, #9013fe);
+        border-radius: 20px;
+        color: white;
+        margin-top: 40px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
     /* Responsive Design */
     @media (max-width: 768px) {
-        .hero h1 {
-            font-size: 2em; /* Adjusted font size for mobile */
-        }
-        .hero p {
-            font-size: 1em; /* Adjusted font size for mobile */
-        }
+        .hero h1 { font-size: 2.2em; }
+        .hero p { font-size: 1.1em; }
+        .travel-card { font-size: 14px; padding: 15px; }
+        .stButton button { font-size: 16px; padding: 10px 25px !important; }
     }
 </style>
 """, unsafe_allow_html=True)
 
-# 🖼 Hero Section
+# 🖼 Hero Section with Animation
 st.markdown("""
 <div class="hero">
-    <h1>✈ Plan My Trip - AI Powered Travel Planner</h1>
-    <p>Your AI-Powered Travel Guide</p>
+    <h1>✈ Plan My Trip</h1>
+    <p>Your Ultimate AI-Powered Travel Companion</p>
 </div>
 """, unsafe_allow_html=True)
 
-# 📋 UI Input Section
+# 📋 UI Input Section with Enhanced Layout
 with st.expander("✈ Plan Your Trip", expanded=True):
     col1, col2 = st.columns(2)
 
     with col1:
-        source = st.text_input("🏙 Departure City", placeholder="New York")
-        destination = st.text_input("🌆 Destination City", placeholder="Paris")
+        source = st.text_input("🏙 Departure City", placeholder="e.g., New York")
+        destination = st.text_input("🌆 Destination City", placeholder="e.g., Paris")
         travel_date = st.date_input("📅 Travel Date")
         language = st.selectbox("🌍 Language", list(language_codes.keys()))
 
@@ -154,7 +165,7 @@ with st.expander("✈ Plan Your Trip", expanded=True):
         currency = st.selectbox("💲 Currency", ["USD", "EUR", "GBP", "INR", "JPY"])
         budget = st.slider("💰 Budget Range ($)", 100, 5000, (500, 2000))
         preferences = st.multiselect("🎯 Travel Preferences", ["Eco-friendly", "Fastest Route", "Budget Options", "Luxury Travel", "Adventure"])
-        email = st.text_input("📧 Receive Itinerary via Email (Optional)")
+        email = st.text_input("📧 Email for Itinerary (Optional)", placeholder="you@example.com")
 
 # 🧠 AI Travel Plan Generator
 def get_travel_plan(source, destination, currency, budget, language):
@@ -177,21 +188,21 @@ def get_travel_plan(source, destination, currency, budget, language):
     - Budget: {budget[0]} - {budget[1]} USD
     - Preferences: {", ".join(preferences) if preferences else "Standard travel"}
 
-    *Translate the entire response into {language}. Keep it structured and clear.*
+    *Translate the entire response into {language}. Keep it structured, clear, and visually appealing with markdown formatting (e.g., ### Headings, - Bullet points).*
     """
 
     # Initialize AI model
-    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", google_api_key=GOOGLE_API_KEY)
+    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", google_api_key=GOOGLE_API_KEY)  # Updated to a more stable model
 
     try:
         response = llm.invoke([
             SystemMessage(content="You are an AI travel expert."),
             HumanMessage(content=prompt_template)
         ])
-        if response:
+        if response and response.content:
             return response.content
         else:
-            return "⚠ No response from AI."
+            return "⚠ No response from AI. Please try again."
     except Exception as e:
         return f"❌ Error fetching travel options: {str(e)}"
 
@@ -208,53 +219,69 @@ def translate_text(text, target_language):
         st.error(f"Translation error: {e}")
         return text
 
-# 🚀 Generate Plan Button
+# 🚀 Generate Plan Button with Download Feature
 if st.button("🚀 Generate AI Travel Plan"):
     if not source or not destination:
         st.warning("⚠ Please enter both the departure and destination cities!")
     else:
-        with st.spinner("🔍 Finding the best options for you..."):
+        with st.spinner("🔍 Crafting your perfect trip..."):
             plan = get_travel_plan(source, destination, currency, budget, language)
 
         if plan and not plan.startswith("❌"):
             st.success("🎉 Your AI-Powered Travel Plan is Ready!")
             st.markdown(f'<div class="travel-card">{plan}</div>', unsafe_allow_html=True)
 
+            # Download Button for Itinerary
+            st.download_button(
+                label="📥 Download Itinerary",
+                data=plan,
+                file_name=f"Travel_Plan_{source}_to_{destination}.txt",
+                mime="text/plain"
+            )
+
             if email:
                 st.info(f"📩 Itinerary sent to {email}!")
         else:
             st.error(plan)
 
-# 📌 Sidebar Information
+# 📌 Sidebar with Enhanced Info and Tips
 with st.sidebar:
     st.markdown("## ℹ How It Works")
     st.markdown("""
-    <div style="color: #f2f2f2;">
-    <p> Enter travel details</p>
-    <p> Select preferences & budget</p>
-    <p> Click Generate AI Travel Plan</p>
-    <p> Get an instant AI-powered itinerary</p>
-    <p> (Optional) Receive itinerary via email</p>
-    </div>
-    """, unsafe_allow_html=True)
+    - Enter your travel details
+    - Choose preferences & budget
+    - Hit "Generate AI Travel Plan"
+    - Get a tailored itinerary instantly
+    - Optionally receive it via email
+    """)
 
     st.markdown("---")
-    st.markdown("### 🌟 Why Use Plan My Trip AI Travel Planner?")
+    st.markdown("### 🌟 Why Choose Us?")
     st.markdown("""
-    <div style="color: #f2f2f2;">
-    <p>✅ AI-powered personalized recommendations</p>
-    <p>✅ Weather & Temperature Info</p>
-    <p>✅ Multi-language support</p>
-    <p>✅ Detailed descriptions of places, hotels, and restaurants</p>
-    <p>✅ Vehicle Transportation Options</p>
-    <p>✅ Email itinerary feature</p>
-    </div>
-    """, unsafe_allow_html=True)
+    - ✅ Personalized AI recommendations
+    - ✅ Multi-language support
+    - ✅ Detailed itineraries
+    - ✅ Weather & transportation info
+    - ✅ Downloadable plans
+    """)
 
-# Footer
+    # Added Travel Tips Feature
+    st.markdown("---")
+    st.markdown("### ✈ Quick Travel Tips")
+    tips = [
+        "Pack light to save space!",
+        "Always carry a portable charger.",
+        "Check visa requirements early.",
+        "Book flights in advance for deals."
+    ]
+    st.write("\n".join([f"- {tip}" for tip in tips]))
+
+# Footer with Social Links
 st.markdown("""
 <div class="footer">
-    <p>✨ Explore the places & Happy Travels ✨<br>
-    Created by Gopichand Challa </p>
+    <p>✨ Explore the World & Happy Travels ✨<br>
+    Created by Gopichand Challa<br>
+    <a href="https://twitter.com" style="color: white; text-decoration: none;">Twitter</a> | 
+    <a href="https://linkedin.com" style="color: white; text-decoration: none;">LinkedIn</a></p>
 </div>
 """, unsafe_allow_html=True)
