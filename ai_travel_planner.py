@@ -21,7 +21,7 @@ language_codes = {
 
 # 🎨 Streamlit UI Setup
 st.set_page_config(
-    page_title="✈ Make My Trip AI Travel Planner",
+    page_title="✈ Plan My Trip - AI Powered Travel Planner",
     page_icon="🌍",
     layout="wide"
 )
@@ -30,9 +30,11 @@ st.set_page_config(
 st.markdown("""
 <style>
     /* General Styling */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
     body {
-        font-family: 'Arial', sans-serif;
+        font-family: 'Poppins', sans-serif;
         color: #333;
+        background-color: #f5f5f5;
     }
     .stTextInput input, .stDateInput input, .stSelectbox select {
         border: 1px solid #4a90e2 !important;
@@ -69,35 +71,80 @@ st.markdown("""
     }
     /* Sidebar Styling */
     .css-1d391kg {
-        background: #f0f2f6 !important;
+        background: linear-gradient(45deg, #4a90e2, #9013fe) !important;
         padding: 20px !important;
         border-radius: 15px !important;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        color: white !important;
     }
     .sidebar .stMarkdown h2 {
-        color: #4a90e2 !important;
+        color: white !important;
     }
     .sidebar .stMarkdown p {
-        color: #333 !important;
+        color: white !important;
     }
     /* Footer Styling */
     .footer {
         text-align: center;
         padding: 20px;
-        background: #f0f2f6;
+        background: #4a90e2;
         border-radius: 15px;
-        color: #333;
+        color: white;
         margin-top: 30px;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    /* Hero Section with Background Image */
+    .hero {
+        text-align: center;
+        padding: 60px 0;
+        margin-bottom: 30px;
+        background: url('https://images.unsplash.com/photo-1503220317375-aaad61436b1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        position: relative;
+    }
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 15px;
+    }
+    .hero h1 {
+        font-size: 3.5em;
+        margin-bottom: 10px;
+        font-weight: 600;
+        position: relative;
+        z-index: 1;
+    }
+    .hero p {
+        font-size: 1.5em;
+        position: relative;
+        z-index: 1;
+    }
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 2.5em;
+        }
+        .hero p {
+            font-size: 1.2em;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
 
-# 🖼 Hero Section
+# 🖼 Hero Section with Background Image
 st.markdown("""
-<div style="text-align: center; padding: 40px 0; margin-bottom: 30px;">
-    <h1 style="color: #4a90e2; font-size: 3em; margin-bottom: 10px;">✈ Make My Trip AI Travel Planner</h1>
-    <p style="color: #333; font-size: 1.4em;">Your AI-Powered Travel Guide</p>
+<div class="hero">
+    <h1>✈ Plan My Trip - AI Powered Travel Planner</h1>
+    <p>Your AI-Powered Travel Guide</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -187,7 +234,7 @@ if st.button("🚀 Generate AI Travel Plan"):
 with st.sidebar:
     st.markdown("## ℹ How It Works")
     st.markdown("""
-    <div style="color: #333;">
+    <div style="color: white;">
     <p>⿡ Enter travel details</p>
     <p>⿢ Select preferences & budget</p>
     <p>⿣ Click 'Generate AI Travel Plan'</p>
@@ -197,9 +244,9 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
     st.markdown("---")
-    st.markdown("### 🌟 Why Use Make My Trip AI Travel Planner?")
+    st.markdown("### 🌟 Why Use Plan My Trip AI Travel Planner?")
     st.markdown("""
-    <div style="color: #333;">
+    <div style="color: white;">
     <p>✅ AI-powered personalized recommendations</p>
     <p>✅ Weather & Temperature Info</p>
     <p>✅ Multi-language support</p>
