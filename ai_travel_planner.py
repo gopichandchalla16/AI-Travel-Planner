@@ -62,6 +62,8 @@ st.markdown("""
         background: white;
         font-size: 16px;
         line-height: 1.6;
+        overflow: auto; /* Added to ensure full visibility of content */
+        max-height: 400px; /* Limit height with scrollbar */
     }
     .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
         color: #4a90e2 !important;
@@ -71,25 +73,13 @@ st.markdown("""
     }
     /* Sidebar Styling */
     .css-1d391kg {
-        background: white !important; /* Light background for sidebar */
+        background: #f0f4f8 !important; /* Light blue background for better visibility */
         padding: 20px !important;
         border-radius: 15px !important;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
-    .sidebar .stMarkdown h2 {
-        color: #333 !important; /* Dark color for headings */
-        font-size: 1.5em !important;
-        margin-bottom: 10px !important;
-    }
-    .sidebar .stMarkdown h3 {
-        color: #4a90e2 !important; /* Blue for subheadings */
-        font-size: 1.2em !important;
-        margin-bottom: 10px !important;
-    }
-    .sidebar .stMarkdown p {
-        color: #555 !important; /* Dark gray for better readability */
-        font-size: 1em !important;
-        line-height: 1.6 !important;
+    .sidebar .stMarkdown h2, .sidebar .stMarkdown h3, .sidebar .stMarkdown p {
+        color: #333 !important; /* Dark color for better visibility */
     }
     /* Footer Styling */
     .footer {
@@ -106,27 +96,30 @@ st.markdown("""
         text-align: center;
         padding: 60px 0;
         margin-bottom: 30px;
-        background: white; /* Light background for app name */
+        background: white;
         border-radius: 15px;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
     }
     .hero h1 {
-        font-size: 2.5em; /* Adjusted font size */
+        font-size: 3em;
         margin-bottom: 10px;
-        font-weight: 600;
-        color: #4a90e2; /* Blue for app name */
+        font-weight: 700;
+        color: #4a90e2;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        animation: glow 2s infinite alternate;
     }
     .hero p {
-        font-size: 1.2em; /* Adjusted font size */
-        color: #333; /* Dark text for subtitle */
+        font-size: 1.4em;
+        color: #333;
     }
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .hero h1 {
-            font-size: 2em; /* Adjusted font size for mobile */
+    @keyframes glow {
+        from {
+            text-shadow: 2px 2px 15px rgba(74, 144, 226, 0.7);
         }
-        .hero p {
-            font-size: 1em; /* Adjusted font size for mobile */
+        to {
+            text-shadow: 2px 2px 20px rgba(144, 19, 254, 0.7);
         }
     }
 </style>
@@ -136,7 +129,7 @@ st.markdown("""
 st.markdown("""
 <div class="hero">
     <h1>✈ Plan My Trip - AI Powered Travel Planner</h1>
-    <p>Your AI-Powered Travel Guide</p>
+    <p>Your AI-Powered Travel Guide with Multi-Language Support</p>
 </div>
 """, unsafe_allow_html=True)
 
