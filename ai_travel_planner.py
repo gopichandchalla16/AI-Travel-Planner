@@ -1,10 +1,11 @@
 import streamlit as st
-import requests
-from datetime import datetime
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.messages import HumanMessage, SystemMessage
+from googletrans import Translator  # For translation
+import os
 
 # 🛠 Configuration
-# For deployment, use secrets.toml; hardcoded here for testing
-GOOGLE_API_KEY = "AIzaSyB12LqrvgCDH8zh2kwRSER-6KEw6PcLbaQ"  # Your API key
+GOOGLE_API_KEY = st.secrets.get("GOOGLE_API_KEY", os.getenv("GOOGLE_API_KEY"))
 
 # 📍 Cities with IATA Codes
 cities_with_iata = {
@@ -12,6 +13,12 @@ cities_with_iata = {
     "Sydney": "SYD", "Dubai": "DXB", "Mumbai": "BOM", "Berlin": "BER",
     "Rome": "FCO", "Barcelona": "BCN", "Singapore": "SIN", "Los Angeles": "LAX",
     "Toronto": "YYZ", "Cape Town": "CPT", "Delhi": "DEL"
+}
+
+# 🌍 Supported Languages
+language_codes = {
+    "English": "en", "French": "fr", "Spanish": "es", "German": "de",
+    "Italian": "it", "Hindi": "hi", "Telugu": "te", "Tamil": "ta"
 }
 
 # 🎨 Streamlit UI Setup
@@ -67,7 +74,7 @@ st.markdown("""
 st.markdown("""
 <div class="hero">
     <h1>✈ Plan My Trip</h1>
-    <p>Fast & Eco-Friendly Travel Insights</p>
+    <p>Your Comprehensive AI-Powered Travel Planner</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -78,56 +85,53 @@ with st.expander("✈ Plan Your Trip", expanded=True):
         source = st.selectbox("🏙 Departure City", [""] + list(cities_with_iata.keys()), index=0)
         destination = st.selectbox("🌆 Destination City", [""] + list(cities_with_iata.keys()), index=0)
         travel_date = st.date_input("📅 Travel Date", min_value=datetime.today())
+        language = st.selectbox("🌍 Language", list(language_codes.keys()))
 
     with col2:
-        carrier = st.text_input("✈ Airline Code", "AA", help="e.g., AA (American Airlines), BA (British Airways)")
-        flight_number = st.number_input("🔢 Flight Number", min_value=1, value=100, help="e.g., 100")
+        currency = st.selectbox("💲 Currency", ["USD", "EUR", "GBP", "INR", "JPY"])
+        budget = st.slider("💰 Budget Range ($)", 100, 5000, (500, 2000))
 
-# 🧠 Fetch Travel Data with Travel Impact Model API
-def get_travel_emissions(source, destination, travel_date, carrier, flight_number):
-    url = f"https://travelimpactmodel.googleapis.com/v1/flights:computeFlightEmissions?key={GOOGLE_API_KEY}"
-    payload = {
-        "flights": [{
-            "origin": cities_with_iata.get(source, ""),
-            "destination": cities_with_iata.get(destination, ""),
-            "operatingCarrierCode": carrier.upper(),  # Ensure uppercase for IATA codes
-            "flightNumber": int(flight_number),       # Ensure integer
-            "departureDate": {
-                "year": travel_date.year,
-                "month": travel_date.month,
-                "day": travel_date.day
-            }
-        }]
-    }
-    headers = {"Content-Type": "application/json"}
-    
+# 🧠 AI Travel Plan Generator with Google Generative Language API
+def get_travel_plan(source, destination, travel_date, currency, budget, language):
+    prompt_template = f"""
+    You are an AI travel expert. Generate a comprehensive travel itinerary from {source} to {destination} in {language} for the date {travel_date.strftime('%Y-%m-%d')}.
+
+    *Plan Should Include:*
+    - Best flights/trains/buses with estimated cost
+    - Top-rated hotels with detailed descriptions (e.g., amenities, location, price range)
+    - Famous places to visit with detailed descriptions (e.g., historical significance, entry fees, timings)
+    - Local food & restaurants with detailed descriptions (e.g., popular dishes, price range, ambiance)
+    - Weather information and temperature forecast for the travel dates
+    - Pilgrimage places (if any) with detailed descriptions
+    - Vehicle transportation options with pricing (e.g., taxis, public transport, rental cars)
+    - Budget breakdown: Transport, Stay, Food, and Activities
+    - Essential travel tips and safety recommendations (e.g., local customs, emergency contacts)
+
+    *Additional Details:*
+    - Currency: {currency}
+    - Budget: {budget[0]} - {budget[1]} USD
+    - Preferences: Standard travel
+
+    *Translate the entire response into {language}. Keep it structured, clear, and use markdown formatting (e.g., ### Headings, - Bullet points).*
+    """
+
+    # Initialize the Google Generative Language API (Gemini model)
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-2.0-flash-exp",  # Assuming this model is available; adjust as needed
+        google_api_key=GOOGLE_API_KEY
+    )
+
     try:
-        response = requests.post(url, json=payload, headers=headers, timeout=5)
-        response.raise_for_status()
-        data = response.json()
-        if "flightEmissions" in data and data["flightEmissions"]:
-            emissions = data["flightEmissions"][0]["emissionsGramsPerPax"]["co2e"] / 1000  # Convert to kg
-            plan = f"""
-            ### Travel Plan: {source} to {destination}
-            **Date:** {travel_date.strftime('%Y-%m-%d')}
-            **Flight:** {carrier} {flight_number}
-
-            #### Emissions Estimate
-            - CO2e per passenger: {emissions:.2f} kg
-
-            #### Quick Tips
-            - Offset emissions with carbon credits.
-            - Pack light to reduce fuel consumption.
-            - Confirm flight details with the airline.
-            """
-            return plan
+        response = llm.invoke([
+            SystemMessage(content="You are an expert travel planner providing detailed itineraries."),
+            HumanMessage(content=prompt_template)
+        ])
+        if response and response.content:
+            return response.content
         else:
-            return "⚠ No emissions data available. Verify flight number and airline code."
-    except requests.Timeout:
-        return "❌ Request timed out. Try again later."
-    except requests.RequestException as e:
-        error_msg = response.text if 'response' in locals() else str(e)
-        return f"❌ Error: {error_msg}. Ensure API key is valid and flight exists."
+            return "⚠ No response from the API. Please try again."
+    except Exception as e:
+        return f"❌ Error fetching itinerary: {str(e)}. Check API key and model availability."
 
 # 🚀 Generate Plan Button
 if st.button("🚀 Generate Travel Plan"):
@@ -135,14 +139,12 @@ if st.button("🚀 Generate Travel Plan"):
         st.warning("⚠ Please select both cities!")
     elif source not in cities_with_iata or destination not in cities_with_iata:
         st.warning("⚠ Please select valid cities from the list!")
-    elif not carrier or not flight_number:
-        st.warning("⚠ Please enter a valid airline code and flight number!")
     else:
-        with st.spinner("🔍 Calculating emissions..."):
-            plan = get_travel_emissions(source, destination, travel_date, carrier, flight_number)
+        with st.spinner("🔍 Generating your itinerary..."):
+            plan = get_travel_plan(source, destination, travel_date, currency, budget, language)
         
         if plan and not plan.startswith("❌"):
-            st.success("🎉 Plan Generated Successfully!")
+            st.success("🎉 Travel Plan Generated Successfully!")
             st.markdown(f'<div class="travel-card">{plan}</div>', unsafe_allow_html=True)
             st.download_button(
                 label="📥 Download Plan",
@@ -157,12 +159,12 @@ if st.button("🚀 Generate Travel Plan"):
 with st.sidebar:
     st.markdown("## How It Works")
     st.markdown("""
-    - Choose your cities and flight details
-    - Get instant CO2e emissions data
-    - Download your eco-friendly plan
+    - Select your cities, date, and preferences
+    - Choose currency and budget
+    - Get a detailed AI-generated itinerary
     """)
-    st.markdown("### ✈ Tips")
-    st.write("- Use IATA codes (e.g., AA, BA)\n- Check flight schedules\n- Offset your carbon footprint")
+    st.markdown("### ✈ Quick Tips")
+    st.write("- Book flights early\n- Check visa requirements\n- Pack light")
 
 # Footer
 st.markdown("""
