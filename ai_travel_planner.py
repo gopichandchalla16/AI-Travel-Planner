@@ -192,7 +192,7 @@ def get_travel_plan(source, destination, currency, budget, language):
     """
 
     # Initialize AI model
-    llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=GOOGLE_API_KEY)  # Updated to a more stable model
+    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", google_api_key=GOOGLE_API_KEY)  # Updated to a more stable model
 
     try:
         response = llm.invoke([
@@ -246,11 +246,11 @@ if st.button("🚀 Generate AI Travel Plan"):
 
 # 📌 Sidebar with Enhanced Info and Tips
 with st.sidebar:
-    st.markdown("## ℹ How It Works")
+    st.markdown("## How It Works")
     st.markdown("""
     - Enter your travel details
     - Choose preferences & budget
-    - Hit "Generate AI Travel Plan"
+    - Hit Generate AI Travel Plan
     - Get a tailored itinerary instantly
     - Optionally receive it via email
     """)
@@ -281,7 +281,8 @@ st.markdown("""
 <div class="footer">
     <p>✨ Explore the World & Happy Travels ✨<br>
     Created by Gopichand Challa<br>
-    <a href="https://twitter.com" style="color: white; text-decoration: none;">Twitter</a> | 
-    <a href="https://linkedin.com" style="color: white; text-decoration: none;">LinkedIn</a></p>
+    <a href="https://github.com/gopichandchalla16" style="color: white; text-decoration: none;">GitHub</a> | 
+    <a href="https://www.linkedin.com/in/gopichandchalla" style="color: white; text-decoration: none;">LinkedIn</a> |
+     <a href="http://datascienceportfol.io/gopichandchalla" style="color: white; text-decoration: none;">Portfolio</a></p>
 </div>
 """, unsafe_allow_html=True)
