@@ -1,7 +1,7 @@
 import streamlit as st
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage
-from googletrans import Translator
+#from googletrans import Translator # Removed googletrans
 import os
 from functools import lru_cache
 from datetime import datetime
@@ -115,7 +115,7 @@ with st.expander("✈ Plan Your Trip", expanded=True):
 
 # 🧠 Optimized AI Travel Plan Generator
 @lru_cache(maxsize=128)
-def get_travel_plan(source, destination, currency, budget_min, budget_max, language, travel_date):
+def get_travel_plan(source, destination, currency, budget_min, budget_max, language, travel_date, google_api_key):
     prompt_template = f"""
     You are a travel expert AI. Provide a concise yet detailed travel itinerary from {source} to {destination} for {travel_date.strftime('%Y-%m-%d')} in {language}. Use markdown.
 
@@ -140,7 +140,8 @@ def get_travel_plan(source, destination, currency, budget_min, budget_max, langu
     Keep it fast, structured, and translate to {language}.
     """
 
-    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", google_api_key=GOOGLE_API_KEY)
+    # Pass the API key directly to the LLM
+    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", google_api_key=google_api_key)
     try:
         response = llm.invoke([
             SystemMessage(content="You are a highly efficient travel expert AI."),
@@ -151,35 +152,42 @@ def get_travel_plan(source, destination, currency, budget_min, budget_max, langu
         return f"❌ Error: {str(e)}"
 
 # ✅ Translation Function
+# Removed translation functionality due to issues with googletrans
 def translate_text(text, target_language):
-    if target_language == "English":
-        return text
-    translator = Translator()
-    try:
-        return translator.translate(text, dest=language_codes.get(target_language, "en")).text
-    except Exception as e:
-        st.error(f"Translation error: {e}")
-        return text
+    return text
+    #The following piece of code is just there for documentation purposes
+    # if target_language == "English":
+    #     return text
+    # translator = Translator()
+    # try:
+    #     return translator.translate(text, dest=language_codes.get(target_language, "en")).text
+    # except Exception as e:
+    #     st.error(f"Translation error: {e}")
+    #     return text
 
 # 🚀 Generate Plan Button
 if st.button("🚀 Generate Travel Plan"):
     if not source or not destination or source == "" or destination == "":
         st.warning("⚠ Please select both cities!")
     else:
-        with st.spinner("🔍 Generating your plan..."):
-            plan = get_travel_plan(source, destination, currency, budget[0], budget[1], language, travel_date)
-        
-        if plan and not plan.startswith("❌"):
-            st.success("🎉 Plan Ready!")
-            st.markdown(f'<div class="travel-card">{plan}</div>', unsafe_allow_html=True)
-            st.download_button(
-                label="📥 Download Plan",
-                data=plan,
-                file_name=f"Travel_Plan_{source}_to_{destination}.txt",
-                mime="text/plain"
-            )
+        # Check if API key is valid before proceeding
+        if not GOOGLE_API_KEY:
+            st.error("❌ No Google API Key provided. Please set the GOOGLE_API_KEY environment variable or Streamlit secret.")
         else:
-            st.error(plan)
+            with st.spinner("🔍 Generating your plan..."):
+                plan = get_travel_plan(source, destination, currency, budget[0], budget[1], language, travel_date, GOOGLE_API_KEY) # Pass the API Key
+
+            if plan and not plan.startswith("❌"):
+                st.success("🎉 Plan Ready!")
+                st.markdown(f'<div class="travel-card">{plan}</div>', unsafe_allow_html=True)
+                st.download_button(
+                    label="📥 Download Plan",
+                    data=plan,
+                    file_name=f"Travel_Plan_{source}_to_{destination}.txt",
+                    mime="text/plain"
+                )
+            else:
+                st.error(plan)
 
 # 📌 Sidebar
 with st.sidebar:
@@ -196,7 +204,7 @@ with st.sidebar:
 # Footer
 st.markdown("""
 <div class="footer">
-    <p>✨ Happy Travels ✨<br>Created by Gopichand Challa<br>
+    <p>✨ Explore the Places & Happy Travels ✨<br>Created by Gopichand Challa<br>
     <a href="https://github.com/gopichandchalla16" style="color: white;">GitHub</a> | 
     <a href="https://www.linkedin.com/in/gopichandchalla" style="color: white;">LinkedIn</a></p>
 </div>
