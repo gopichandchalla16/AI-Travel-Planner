@@ -68,11 +68,11 @@ st.markdown("""
         box-shadow: 0 6px 12px rgba(0,0,0,0.1);
         margin: 15px 0;
         background: rgba(255, 255, 255, 0.95);
-        color: #333 !important; /* Ensure text is dark and visible */
+        color: #333 !important;
         font-size: 16px;
         line-height: 1.6;
-        max-height: 500px; /* Limit height and allow scrolling */
-        overflow-y: auto; /* Enable vertical scrolling */
+        max-height: 600px;
+        overflow-y: auto;
     }
     .hero {
         text-align: center;
@@ -99,7 +99,7 @@ st.markdown("""
 st.markdown("""
 <div class="hero">
     <h1>✈ Plan My Trip</h1>
-    <p>Fast & Detailed AI Travel Plans</p>
+    <p>Discover Your Destination with AI Precision</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -120,41 +120,53 @@ with st.expander("✈ Plan Your Trip", expanded=True):
         budget = st.slider("💰 Budget Range ($)", 100, 5000, (500, 2000))
         language = st.selectbox("🌍 Language", list(language_codes.keys()))
 
-# 🧠 Optimized AI Travel Plan Generator
+# 🧠 Optimized AI Travel Plan Generator with More Destination Info
 @lru_cache(maxsize=128)
 def get_travel_plan(source, destination, currency, budget_min, budget_max, language, travel_date):
     prompt_template = f"""
-    You are a travel expert AI. Provide a concise travel itinerary from {source} to {destination} for {travel_date.strftime('%Y-%m-%d')} in {language}. Use markdown.
+    You are a travel expert AI. Provide a detailed travel itinerary from {source} to {destination} for {travel_date.strftime('%Y-%m-%d')} in {language}. Use markdown.
+
+    ### Destination Overview
+    - Brief description of {destination} (e.g., culture, history, vibe)
 
     ### Travel Options
     - Best flight/train/bus options with estimated costs in {currency}
     
     ### Accommodation
-    - Top 3 hotels with brief details (location, price in {currency})
+    - Top 3 hotels with brief details (location, amenities, price in {currency})
     
     ### Attractions
-    - Top 3 places to visit with short descriptions
+    - Top 3 places to visit with detailed descriptions (e.g., historical significance, entry fees, timings)
     
     ### Food
-    - 2-3 local food recommendations
+    - 2-3 local food recommendations with descriptions (e.g., dishes, price range, ambiance)
+    
+    ### Weather Forecast
+    - Current or forecasted weather conditions for {destination} on {travel_date.strftime('%Y-%m-%d')}
+    
+    ### Pilgrimage Sites
+    - Notable religious or historical sites in {destination} (if any) with brief descriptions
+    
+    ### Local Transportation
+    - Options like taxis, public transport, rental cars with estimated pricing in {currency}
     
     ### Budget Breakdown
-    - Total estimate within {budget_min}-{budget_max} USD (convert to {currency})
+    - Total estimate within {budget_min}-{budget_max} USD (convert to {currency}) for transport, stay, food, and activities
     
-    ### Quick Tips
-    - 2-3 essential travel tips
+    ### Travel Tips & Safety
+    - 2-3 essential tips (e.g., local customs, etiquette)
+    - Basic safety advice or emergency contacts for {destination}
     
-    Keep it fast, concise, and structured.
+    Keep it structured, detailed, and accurate based on available knowledge.
     """
 
     llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=GOOGLE_API_KEY)
     try:
         response = llm.invoke([
-            SystemMessage(content="You are a highly efficient travel expert AI."),
+            SystemMessage(content="You are a highly efficient travel expert AI with up-to-date knowledge."),
             HumanMessage(content=prompt_template)
         ])
         if response and response.content:
-            # Ensure content is returned as plain text for debugging
             return response.content
         else:
             return "⚠ No response from AI."
@@ -166,15 +178,13 @@ if st.button("🚀 Generate Travel Plan"):
     if not source or not destination or source == "" or destination == "":
         st.warning("⚠ Please select both cities!")
     else:
-        with st.spinner("🔍 Generating your plan..."):
+        with st.spinner("🔍 Crafting your detailed plan..."):
             plan = get_travel_plan(source, destination, currency, budget[0], budget[1], language, travel_date)
         
         if plan and not plan.startswith("❌"):
-            st.success("🎉 Plan Ready!")
-            # Display plan with markdown and fallback to plain text if needed
+            st.success("🎉 Your Detailed Plan is Ready!")
             st.markdown(f'<div class="travel-card">{plan}</div>', unsafe_allow_html=True)
-            # Add fallback to ensure visibility
-            st.write(plan)  # Plain text fallback
+            st.write(plan)  # Fallback for visibility
             st.download_button(
                 label="📥 Download Plan",
                 data=plan,
@@ -188,19 +198,19 @@ if st.button("🚀 Generate Travel Plan"):
 with st.sidebar:
     st.markdown("## How It Works")
     st.markdown("""
-    - Pick your cities & date
-    - Set budget & language
-    - Get a fast, detailed plan
+    - Select your cities and travel date
+    - Choose currency, budget, and language
+    - Receive a detailed itinerary instantly
     """)
     st.markdown("### ✈ Tips")
-    st.write("- Book early for savings\n- Check weather\n- Pack light")
+    st.write("- Book early for savings\n- Research visa requirements\n- Pack light for convenience")
 
 # Footer
 st.markdown("""
 <div class="footer">
-    <p>✨ Explore the places & Happy Travels ✨<br>Created by Gopichand Challa<br>
+    <p>✨ Explore the Places & Happy Travels ✨<br>Created by Gopichand Challa<br>
     <a href="https://github.com/gopichandchalla16" style="color: white;">GitHub</a> | 
     <a href="https://www.linkedin.com/in/gopichandchalla" style="color: white;">LinkedIn</a> |
-    <a href="http://datascienceportfol.io/gopichandchalla" style="color: white;">Portfolio</p>
+    <a href="http://datascienceportfol.io/gopichandchalla" style="color: white;">Portfolio</a></p>
 </div>
 """, unsafe_allow_html=True)
