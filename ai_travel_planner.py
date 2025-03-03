@@ -192,7 +192,7 @@ def get_travel_plan(source, destination, currency, budget, language):
     """
 
     # Initialize AI model
-    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", google_api_key=GOOGLE_API_KEY)  # Updated to a more stable model
+    llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=GOOGLE_API_KEY)  # Updated to a more stable model
 
     try:
         response = llm.invoke([
