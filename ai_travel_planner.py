@@ -3,10 +3,18 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage
 from datetime import datetime
 from functools import lru_cache
+import os  # Added os import to fix NameError
 
 # 🛠 Configuration
-# Access API key from secrets.toml or environment variable (no hardcoded fallback)
+# Access API key from secrets.toml or environment variable
 GOOGLE_API_KEY = st.secrets.get("general", {}).get("GOOGLE_API_KEY", os.getenv("GOOGLE_API_KEY"))
+
+# Check if API key is configured
+if not GOOGLE_API_KEY:
+    st.error("""
+    ❌ **API Key Missing**  
+    Please configure the GOOGLE_API_KEY in `.streamlit/secrets.toml` or as an environment variable.  
+    Example for `secrets.toml`:  
 
 # 🌍 Supported Languages
 language_codes = {
