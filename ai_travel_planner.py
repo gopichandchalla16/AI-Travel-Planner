@@ -198,7 +198,7 @@ st.markdown("""
 <div class="footer">
     <p>✨ Happy Travels ✨<br>Created by Gopichand Challa<br>
     <a href="https://github.com/gopichandchalla16" style="color: white;">GitHub</a> | 
-    <a href="https://www.linkedin.com/in/gopichandchalla" style="color: white;">LinkedIn</a>
+    <a href="https://www.linkedin.com/in/gopichandchalla" style="color: white;">LinkedIn</a> |
      <a href="http://datascienceportfol.io/gopichandchalla" style="color: white;">Portfolio</a></p>
 </div>
 """, unsafe_allow_html=True)
