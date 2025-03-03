@@ -3,9 +3,13 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage
 from googletrans import Translator  # For translation
 import os
+import gtts  # For text-to-speech
+import base64  # For audio playback
 
 # 🛠 Configuration
 GOOGLE_API_KEY = st.secrets.get("GOOGLE_API_KEY", os.getenv("GOOGLE_API_KEY"))
+if not GOOGLE_API_KEY:
+    st.error("Missing Google API Key. Please configure your API Key.")
 
 # 🌍 Supported Languages
 language_codes = {
@@ -57,7 +61,7 @@ st.markdown("""
         padding: 20px;
         background: rgba(255, 255, 255, 0.9);
         border-radius: 15px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         margin: 20px 0;
         max-height: 400px;
         overflow: auto;
@@ -69,16 +73,13 @@ st.markdown("""
         color: white;
         margin-top: 30px;
     }
-    .custom-title {
-        color: #ff7eb3;
-        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-    }
 </style>
 """, unsafe_allow_html=True)
 
+# 🖼 Hero Section
 st.markdown("""
 <div style="text-align: center; margin-bottom: 50px;">
-    <h1 class="custom-title">🌍 Plan My Trip</h1>
+    <h1>🌍 Plan My Trip</h1>
     <p>Your Personalized AI-Powered Travel Planner</p>
 </div>
 """, unsafe_allow_html=True)
@@ -100,18 +101,18 @@ with st.expander("✈ Plan Your Trip", expanded=True):
         email = st.text_input("📧 Receive Itinerary via Email (Optional)")
 
 # 🧠 AI Travel Plan Generator
-def get_travel_plan(source, destination, currency, budget, language):
+def get_travel_plan(source, destination, currency, budget, language, preferences):
     prompt_template = f"""
     You are an AI travel expert. Generate a comprehensive travel itinerary from {source} to {destination} in {language}.
 
     *Plan Should Include:*
     - Best flights/trains/buses with estimated cost
     - Top-rated hotels with detailed descriptions
-    - Famous places to visit with descriptions
-    - Local food & restaurants with descriptions
+    - Famous places to visit with detailed descriptions
+    - Local food & restaurants
     - Weather information
     - Pilgrimage places (if any)
-    - Transportation options with pricing
+    - Transportation options
     - Budget breakdown
     - Essential travel tips
 
@@ -119,26 +120,50 @@ def get_travel_plan(source, destination, currency, budget, language):
     *Budget:* {budget[0]} - {budget[1]} USD
     *Preferences:* {", ".join(preferences) if preferences else "Standard travel"}
     """
-    model = ChatGoogleGenerativeAI(api_key=GOOGLE_API_KEY)
-    messages = [SystemMessage(content=prompt_template)]
-    response = model.predict(messages=messages)
-    return response
+    model = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=GOOGLE_API_KEY)
+    messages = [
+        SystemMessage(content="You are an AI travel expert."),
+        HumanMessage(content=prompt_template)
+    ]
+    response = model.invoke(messages)
+    return response.content
 
+# 🔊 Text-to-Speech Function
+def text_to_speech(text, language_code):
+    try:
+        tts = gtts.gTTS(text, lang=language_code)
+        tts.save("output.mp3")
+        with open("output.mp3", "rb") as audio_file:
+            audio_bytes = audio_file.read()
+        return audio_bytes
+    except Exception as e:
+        st.error(f"Error generating speech: {e}")
+        return None
+
+# 🚀 Generate Itinerary Button
 if st.button("Generate Itinerary ✈"):
     if source and destination:
         with st.spinner("Generating your personalized travel itinerary..."):
-            travel_plan = get_travel_plan(source, destination, currency, budget, language)
-            st.markdown(f"""
-            <div class="travel-card">
-                <h3>🌍 Your Travel Itinerary from {source} to {destination}</h3>
-                <p>{travel_plan}</p>
-            </div>
-            """, unsafe_allow_html=True)
+            try:
+                travel_plan = get_travel_plan(source, destination, currency, budget, language, preferences)
+                st.markdown(f"""
+                <div class="travel-card">
+                    <h3>🌍 Your Travel Itinerary from {source} to {destination}</h3>
+                    <p>{travel_plan}</p>
+                </div>
+                """, unsafe_allow_html=True)
 
-            st.download_button("📄 Download Itinerary as PDF", travel_plan, file_name=f"{source}_to_{destination}_Itinerary.pdf")
+                # 🔊 Speak Button
+                st.markdown("### 🔊 Listen to Your Itinerary")
+                audio_bytes = text_to_speech(travel_plan, language_codes[language])
+                if audio_bytes:
+                    st.audio(audio_bytes, format="audio/mp3")
+            except Exception as e:
+                st.error(f"An error occurred: {str(e)}")
     else:
         st.warning("Please fill all required fields!")
 
+# Footer
 st.markdown("""
 <div class="footer">
     Created by Gopichand Challa
