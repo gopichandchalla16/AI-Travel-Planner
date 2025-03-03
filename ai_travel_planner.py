@@ -217,19 +217,19 @@ if st.button("🚀 Generate AI Travel Plan"):
 
 # 📌 Sidebar Information
 with st.sidebar:
-    st.markdown("## ℹ How It Works")
+    st.markdown("##  How It Works")
     st.markdown("""
     <div style="color: #4a90e2; background: #f0f8ff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
     <p>⿡ Enter travel details</p>
     <p>⿢ Select preferences & budget</p>
-    <p>⿣ Click 'Generate AI Travel Plan'</p>
+    <p>⿣ Click Generate AI Travel Plan</p>
     <p>⿤ Get an instant AI-powered itinerary</p>
     <p>⿥ (Optional) Receive itinerary via email</p>
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown("---")
-    st.markdown("### 🌟 Why Use Plan My Trip AI Travel Planner?")
+    st.markdown("### Why Use Plan My Trip AI Travel Planner?")
     st.markdown("""
     <div style="color: #4a90e2; background: #f0f8ff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
     <p>✅ AI-powered personalized recommendations</p>
@@ -245,6 +245,6 @@ with st.sidebar:
 st.markdown("""
 <div class="footer">
     <p>✨ Explore the places & Happy Travels ✨<br>
-    Created by Gopichand Challa • Powered by Google Gemini</p>
+    Created by Gopichand Challa | Powered by Google Gemini</p>
 </div>
 """, unsafe_allow_html=True)
