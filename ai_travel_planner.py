@@ -117,24 +117,26 @@ st.markdown("""
         border-radius: 15px;
     }
     .hero h1 {
-        font-size: 3.5em;
+        font-size: 2.5em; /* Adjusted font size */
         margin-bottom: 10px;
         font-weight: 600;
         position: relative;
         z-index: 1;
+        color: white; /* Ensure app name is white */
     }
     .hero p {
-        font-size: 1.5em;
+        font-size: 1.2em; /* Adjusted font size */
         position: relative;
         z-index: 1;
+        color: white; /* Ensure subtitle is white */
     }
     /* Responsive Design */
     @media (max-width: 768px) {
         .hero h1 {
-            font-size: 2.5em;
+            font-size: 2em; /* Adjusted font size for mobile */
         }
         .hero p {
-            font-size: 1.2em;
+            font-size: 1em; /* Adjusted font size for mobile */
         }
     }
 </style>
