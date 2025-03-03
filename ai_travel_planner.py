@@ -21,20 +21,22 @@ language_codes = {
 
 # 🎨 Streamlit UI Setup
 st.set_page_config(
-    page_title="✈ Plan My Trip - AI Powered Travel Planner",
+    page_title="✈ WanderAI Travel Planner",
     page_icon="🌍",
     layout="wide"
 )
 
-# 💅 Custom CSS for Better UI
+# 💅 Custom CSS for Better UI with Background Image
 st.markdown("""
 <style>
-    /* General Styling */
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
     body {
         font-family: 'Poppins', sans-serif;
         color: #333;
-        background-color: #f5f5f5;
+        background-image: url('https://source.unsplash.com/1600x900/?travel,adventure');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
     }
     .stTextInput input, .stDateInput input, .stSelectbox select {
         border: 1px solid #4a90e2 !important;
@@ -62,65 +64,24 @@ st.markdown("""
         background: white;
         font-size: 16px;
         line-height: 1.6;
-        overflow: auto; /* Added to ensure full visibility of content */
-        max-height: 400px; /* Limit height with scrollbar */
+        overflow: auto;
+        max-height: 400px;
     }
-    .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
-        color: #4a90e2 !important;
-    }
-    .stMarkdown p {
-        color: #333 !important;
-    }
-    /* Sidebar Styling */
-    .css-1d391kg {
-        background: #f0f4f8 !important; /* Light blue background for better visibility */
-        padding: 20px !important;
-        border-radius: 15px !important;
+    .hero {
+        text-align: center;
+        padding: 60px 0;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 15px;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        position: relative;
     }
-    .sidebar .stMarkdown h2, .sidebar .stMarkdown h3, .sidebar .stMarkdown p {
-        color: #333 !important; /* Dark color for better visibility */
-    }
-    /* Footer Styling */
     .footer {
         text-align: center;
         padding: 20px;
         background: #4a90e2;
-        border-radius: 15px;
         color: white;
         margin-top: 30px;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    /* Hero Section */
-    .hero {
-        text-align: center;
-        padding: 60px 0;
-        margin-bottom: 30px;
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        position: relative;
-        overflow: hidden;
-    }
-    .hero h1 {
-        font-size: 3em;
-        margin-bottom: 10px;
-        font-weight: 700;
-        color: #4a90e2;
-        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-        animation: glow 2s infinite alternate;
-    }
-    .hero p {
-        font-size: 1.4em;
-        color: #333;
-    }
-    @keyframes glow {
-        from {
-            text-shadow: 2px 2px 15px rgba(74, 144, 226, 0.7);
-        }
-        to {
-            text-shadow: 2px 2px 20px rgba(144, 19, 254, 0.7);
-        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -128,7 +89,7 @@ st.markdown("""
 # 🖼 Hero Section
 st.markdown("""
 <div class="hero">
-    <h1>✈ Plan My Trip - AI Powered Travel Planner</h1>
+    <h1>✈ WanderAI Travel Planner</h1>
     <p>Your AI-Powered Travel Guide with Multi-Language Support</p>
 </div>
 """, unsafe_allow_html=True)
