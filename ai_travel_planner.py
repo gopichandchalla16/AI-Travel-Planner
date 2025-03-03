@@ -26,17 +26,18 @@ st.set_page_config(
     layout="wide"
 )
 
-# 💅 Enhanced Custom CSS with Updated Input Styles
+# 💅 Enhanced Custom CSS with Background Image
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
     body {
         font-family: 'Poppins', sans-serif;
         color: #333;
-        background: linear-gradient(135deg, #f5f7fa, #c3cfe2), url('https://www.transparenttextures.com/patterns/aircraft.png');
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2), url('https://www.transparenttextures.com/patterns/old-map.png');
         background-blend-mode: overlay;
         background-size: cover;
         background-position: center;
+        background-attachment: fixed; /* Keeps it stable on scroll */
     }
     /* Enhanced Input Styling for Departure & Destination */
     .stTextInput > div > div > input {
@@ -72,7 +73,7 @@ st.markdown("""
     .stDateInput > div > div > input:hover {
         border-color: #00796b !important;
     }
-    /* Selectbox Styling (Unchanged) */
+    /* Selectbox Styling */
     .stSelectbox > div > div > select {
         border: 2px solid #4a90e2 !important;
         border-radius: 12px !important;
@@ -84,7 +85,7 @@ st.markdown("""
     .stSelectbox > div > div > select:focus {
         border-color: #9013fe !important;
     }
-    /* Button Styling (Unchanged) */
+    /* Button Styling */
     .stButton button {
         background: linear-gradient(45deg, #4a90e2, #9013fe) !important;
         color: white !important;
@@ -99,13 +100,13 @@ st.markdown("""
         transform: scale(1.05) !important;
         box-shadow: 0 6px 15px rgba(0,0,0,0.3);
     }
-    /* Travel Card Styling (Unchanged) */
+    /* Travel Card Styling */
     .travel-card {
         padding: 25px;
         border-radius: 20px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.1);
         margin: 15px 0;
-        background: #fff;
+        background: rgba(255, 255, 255, 0.95); /* Slightly transparent for contrast */
         font-size: 16px;
         line-height: 1.8;
         overflow-x: auto;
@@ -123,7 +124,7 @@ st.markdown("""
     .stMarkdown h2, .stMarkdown h3 {
         color: #00796b !important;
     }
-    /* Sidebar Styling (Unchanged) */
+    /* Sidebar Styling */
     .css-1d391kg {
         background: linear-gradient(135deg, #e0f7fa, #b2ebf2) !important;
         padding: 25px !important;
@@ -140,7 +141,7 @@ st.markdown("""
         font-size: 1.1em !important;
         line-height: 1.7 !important;
     }
-    /* Hero Section (Unchanged) */
+    /* Hero Section */
     .hero {
         text-align: center;
         padding: 80px 20px;
@@ -160,7 +161,7 @@ st.markdown("""
         font-size: 1.4em;
         color: #555;
     }
-    /* Footer Styling (Unchanged) */
+    /* Footer Styling */
     .footer {
         text-align: center;
         padding: 25px;
