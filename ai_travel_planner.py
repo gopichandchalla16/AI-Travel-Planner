@@ -71,23 +71,23 @@ st.markdown("""
     }
     /* Sidebar Styling */
     .css-1d391kg {
-        background: white !important; /* Light background for sidebar */
+        background: #e0f7fa !important; /* Light Cyan background for sidebar */
         padding: 20px !important;
         border-radius: 15px !important;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     .sidebar .stMarkdown h2 {
-        color: #4a90e2 !important; /* Blue for headings */
+        color: #00796b !important; /* Teal for headings */
         font-size: 1.5em !important;
         margin-bottom: 10px !important;
     }
     .sidebar .stMarkdown h3 {
-        color: #4a90e2 !important; /* Blue for subheadings */
+        color: #00796b !important; /* Teal for subheadings */
         font-size: 1.2em !important;
         margin-bottom: 10px !important;
     }
     .sidebar .stMarkdown p {
-        color: #555 !important; /* Dark gray for better readability */
+        color: #37474f !important; /* Dark Blue Gray for better readability */
         font-size: 1em !important;
         line-height: 1.6 !important;
     }
