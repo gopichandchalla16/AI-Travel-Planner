@@ -1,13 +1,12 @@
 import streamlit as st
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage
-from googletrans import Translator
-import os
-from functools import lru_cache
 from datetime import datetime
+from functools import lru_cache
 
 # 🛠 Configuration
-GOOGLE_API_KEY = st.secrets.get("GOOGLE_API_KEY", os.getenv("GOOGLE_API_KEY"))
+# Access API key from secrets.toml or environment variable
+GOOGLE_API_KEY = st.secrets.get("general", {}).get("GOOGLE_API_KEY", "AIzaSyB12LqrvgCDH8zh2kwRSER-6KEw6PcLbaQ")
 
 # 🌍 Supported Languages
 language_codes = {
@@ -43,6 +42,11 @@ st.markdown("""
         padding: 12px !important;
         background: #fff url('https://img.icons8.com/ios-filled/20/4a90e2/marker.png') no-repeat 10px center !important;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .stTextInput > div > div > input {
+        border: 2px solid #4a90e2 !important;
+        border-radius: 15px !important;
+        padding: 12px !important;
     }
     .stDateInput > div > div > input {
         border: 2px solid #4a90e2 !important;
@@ -117,7 +121,7 @@ with st.expander("✈ Plan Your Trip", expanded=True):
 @lru_cache(maxsize=128)
 def get_travel_plan(source, destination, currency, budget_min, budget_max, language, travel_date):
     prompt_template = f"""
-    You are a travel expert AI. Provide a concise yet detailed travel itinerary from {source} to {destination} for {travel_date.strftime('%Y-%m-%d')} in {language}. Use markdown.
+    You are a travel expert AI. Provide a concise travel itinerary from {source} to {destination} for {travel_date.strftime('%Y-%m-%d')} in {language}. Use markdown.
 
     ### Travel Options
     - Best flight/train/bus options with estimated costs in {currency}
@@ -137,29 +141,18 @@ def get_travel_plan(source, destination, currency, budget_min, budget_max, langu
     ### Quick Tips
     - 2-3 essential travel tips
     
-    Keep it fast, structured, and translate to {language}.
+    Keep it fast, concise, and structured.
     """
 
-    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", google_api_key=GOOGLE_API_KEY)
+    llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=GOOGLE_API_KEY)  # Updated to faster model
     try:
         response = llm.invoke([
             SystemMessage(content="You are a highly efficient travel expert AI."),
             HumanMessage(content=prompt_template)
         ])
-        return response.content if response and response.content else "⚠ No response."
+        return response.content if response and response.content else "⚠ No response from AI."
     except Exception as e:
         return f"❌ Error: {str(e)}"
-
-# ✅ Translation Function
-def translate_text(text, target_language):
-    if target_language == "English":
-        return text
-    translator = Translator()
-    try:
-        return translator.translate(text, dest=language_codes.get(target_language, "en")).text
-    except Exception as e:
-        st.error(f"Translation error: {e}")
-        return text
 
 # 🚀 Generate Plan Button
 if st.button("🚀 Generate Travel Plan"):
@@ -189,7 +182,6 @@ with st.sidebar:
     - Set budget & language
     - Get a fast, detailed plan
     """)
-
     st.markdown("### ✈ Tips")
     st.write("- Book early for savings\n- Check weather\n- Pack light")
 
