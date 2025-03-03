@@ -5,7 +5,7 @@ from datetime import datetime
 from functools import lru_cache
 
 # 🛠 Configuration
-# Access API key from secrets.toml or environment variable
+# Access API key from secrets.toml or fallback to hardcoded (for testing only)
 GOOGLE_API_KEY = st.secrets.get("general", {}).get("GOOGLE_API_KEY", "AIzaSyB12LqrvgCDH8zh2kwRSER-6KEw6PcLbaQ")
 
 # 🌍 Supported Languages
@@ -68,8 +68,11 @@ st.markdown("""
         box-shadow: 0 6px 12px rgba(0,0,0,0.1);
         margin: 15px 0;
         background: rgba(255, 255, 255, 0.95);
+        color: #333 !important; /* Ensure text is dark and visible */
         font-size: 16px;
         line-height: 1.6;
+        max-height: 500px; /* Limit height and allow scrolling */
+        overflow-y: auto; /* Enable vertical scrolling */
     }
     .hero {
         text-align: center;
@@ -144,13 +147,17 @@ def get_travel_plan(source, destination, currency, budget_min, budget_max, langu
     Keep it fast, concise, and structured.
     """
 
-    llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=GOOGLE_API_KEY)  # Updated to faster model
+    llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=GOOGLE_API_KEY)
     try:
         response = llm.invoke([
             SystemMessage(content="You are a highly efficient travel expert AI."),
             HumanMessage(content=prompt_template)
         ])
-        return response.content if response and response.content else "⚠ No response from AI."
+        if response and response.content:
+            # Ensure content is returned as plain text for debugging
+            return response.content
+        else:
+            return "⚠ No response from AI."
     except Exception as e:
         return f"❌ Error: {str(e)}"
 
@@ -164,7 +171,10 @@ if st.button("🚀 Generate Travel Plan"):
         
         if plan and not plan.startswith("❌"):
             st.success("🎉 Plan Ready!")
+            # Display plan with markdown and fallback to plain text if needed
             st.markdown(f'<div class="travel-card">{plan}</div>', unsafe_allow_html=True)
+            # Add fallback to ensure visibility
+            st.write(plan)  # Plain text fallback
             st.download_button(
                 label="📥 Download Plan",
                 data=plan,
