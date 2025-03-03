@@ -75,13 +75,21 @@ st.markdown("""
         padding: 20px !important;
         border-radius: 15px !important;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        color: #333 !important; /* Dark text for better contrast */
     }
     .sidebar .stMarkdown h2 {
-        color: #4a90e2 !important; /* Blue for headings */
+        color: #333 !important; /* Dark color for headings */
+        font-size: 1.5em !important;
+        margin-bottom: 10px !important;
+    }
+    .sidebar .stMarkdown h3 {
+        color: #4a90e2 !important; /* Blue for subheadings */
+        font-size: 1.2em !important;
+        margin-bottom: 10px !important;
     }
     .sidebar .stMarkdown p {
-        color: #333 !important; /* Dark text for better contrast */
+        color: #555 !important; /* Dark gray for better readability */
+        font-size: 1em !important;
+        line-height: 1.6 !important;
     }
     /* Footer Styling */
     .footer {
@@ -218,7 +226,7 @@ if st.button("🚀 Generate AI Travel Plan"):
 with st.sidebar:
     st.markdown("## ℹ How It Works")
     st.markdown("""
-    <div style="color: #333;">
+    <div style="color: #555;">
     <p>⿡ Enter travel details</p>
     <p>⿢ Select preferences & budget</p>
     <p>⿣ Click 'Generate AI Travel Plan'</p>
@@ -230,7 +238,7 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### 🌟 Why Use Plan My Trip AI Travel Planner?")
     st.markdown("""
-    <div style="color: #333;">
+    <div style="color: #555;">
     <p>✅ AI-powered personalized recommendations</p>
     <p>✅ Weather & Temperature Info</p>
     <p>✅ Multi-language support</p>
