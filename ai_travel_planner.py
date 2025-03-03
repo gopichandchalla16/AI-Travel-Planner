@@ -77,7 +77,7 @@ st.markdown("""
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     .sidebar .stMarkdown h2 {
-        color: #333 !important; /* Dark color for headings */
+        color: #4a90e2 !important; /* Blue for headings */
         font-size: 1.5em !important;
         margin-bottom: 10px !important;
     }
@@ -181,7 +181,7 @@ def get_travel_plan(source, destination, currency, budget, language):
     """
 
     # Initialize AI model
-    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", google_api_key=GOOGLE_API_KEY)
+     llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", google_api_key=GOOGLE_API_KEY)
 
     try:
         response = llm.invoke([
