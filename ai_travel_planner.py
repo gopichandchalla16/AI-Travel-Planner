@@ -21,59 +21,68 @@ language_codes = {
 
 # 🎨 Streamlit UI Setup
 st.set_page_config(
-    page_title="✈ WanderAI Travel Planner",
+    page_title="✈ Plan My Trip - AI Travel Planner",
     page_icon="🌍",
     layout="wide"
 )
 
-# 💅 Custom CSS for Better UI with Background Image
+# 💅 Custom CSS for Unique UI Experience
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
     body {
         font-family: 'Poppins', sans-serif;
         color: #333;
-        background-image: url('https://source.unsplash.com/1600x900/?travel,adventure');
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
     }
     .stTextInput input, .stDateInput input, .stSelectbox select {
-        border: 1px solid #4a90e2 !important;
-        border-radius: 10px !important;
-        padding: 10px !important;
+        border: 2px solid #4a90e2 !important;
+        border-radius: 15px !important;
+        padding: 12px !important;
         font-size: 16px !important;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     .stButton button {
-        background: linear-gradient(45deg, #4a90e2, #9013fe) !important;
+        background: linear-gradient(45deg, #4a90e2, #ff7e5f) !important;
         color: white !important;
-        border-radius: 25px !important;
-        padding: 10px 30px !important;
+        border-radius: 30px !important;
+        padding: 12px 40px !important;
         font-size: 18px !important;
         font-weight: bold !important;
-        transition: transform 0.2s ease !important;
+        transition: transform 0.3s ease !important;
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
     }
     .stButton button:hover {
-        transform: scale(1.05) !important;
+        transform: scale(1.1) !important;
     }
     .travel-card {
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        margin: 10px 0;
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        margin: 15px 0;
         background: white;
         font-size: 16px;
-        line-height: 1.6;
+        line-height: 1.8;
         overflow: auto;
-        max-height: 400px;
+        max-height: 450px;
     }
     .hero {
         text-align: center;
-        padding: 60px 0;
-        background: rgba(255, 255, 255, 0.8);
-        border-radius: 15px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        position: relative;
+        padding: 80px 0;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        margin-bottom: 30px;
+        animation: fadeIn 2s ease-in-out;
+    }
+    .hero h1 {
+        font-size: 3.5em;
+        color: #4a90e2;
+        text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2);
+    }
+    .hero p {
+        font-size: 1.5em;
+        color: #333;
     }
     .footer {
         text-align: center;
@@ -81,7 +90,15 @@ st.markdown("""
         background: #4a90e2;
         color: white;
         margin-top: 30px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -89,8 +106,8 @@ st.markdown("""
 # 🖼 Hero Section
 st.markdown("""
 <div class="hero">
-    <h1>✈ WanderAI Travel Planner</h1>
-    <p>Your AI-Powered Travel Guide with Multi-Language Support</p>
+    <h1>✈ Plan My Trip - AI Travel Planner</h1>
+    <p>Your Personalized Travel Guide with Multi-Language Support</p>
 </div>
 """, unsafe_allow_html=True)
 
